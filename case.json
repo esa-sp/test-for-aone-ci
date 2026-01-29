@@ -1,0 +1,40 @@
+[
+  {
+    "name": "创建新仓库",
+    "envs": {
+      "ERName": "$RANDOM",
+      "TemplateName": "$RANDOM"
+    },
+    "repoName": "",
+    "requireStatus": "",
+    "requireLogTextList": [
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "正常构建，使用pnpm",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "",
+    "requireLogTextList": [
+      "Going to install pnpm",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "使用非法的EnvironmentVariables参数",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "EnvironmentVariables": "{",
+      "RootDirectory": "/ReactVite"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "",
+    "requireLogTextList": [
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  }
+]
