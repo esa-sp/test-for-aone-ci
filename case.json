@@ -12,15 +12,58 @@
     ]
   },
   {
-    "name": "正常构建，使用pnpm",
+    "name": "正常构建，使用pnpm，生产分支部署成功",
     "envs": {
       "ERName": "test-for-aone-ci",
-      "RootDirectory": "/ReactVite"
+      "RootDirectory": "/ReactVite-without-esajsonc",
+      "InstallCommand": "pnpm install"
     },
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
       "Going to install pnpm",
+      "<<LOG>>step|deployEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "正常构建，使用bun",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite-without-esajsonc",
+      "InstallCommand": "bun install"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Going to install bun latest version",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "正常构建，使用yarn",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite-without-esajsonc",
+      "InstallCommand": "yarn"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "install yarn successfully",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "正常构建，使用cnpm",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite-without-esajsonc",
+      "InstallCommand": "cnpm install"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Going to install cnpm",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
   },
@@ -30,6 +73,174 @@
       "ERName": "test-for-aone-ci",
       "EnvironmentVariables": "{",
       "RootDirectory": "/ReactVite"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "engines node v24.13.0",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite-node-engine"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "is not satisfied, installing version v24.13.0",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "env node 20.x",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite",
+      "NodeVersion": "20.x"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Install node v20.19.4 --> v20.19.4 successfully"
+    ]
+  },
+  {
+    "name": "创建新仓库但仓库已存在",
+    "envs": {
+      "ERName": "cold-queen-2685"
+    },
+    "repoName": "",
+    "requireStatus": "",
+    "requireLogTextList": [
+      "Repository esa-sp/cold-queen-2685 cloned successfully.`"]
+  },
+  {
+    "name": "esa.jsonc installCommand为空字符串，但控制台不为空",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite-jsonc-installCommand-empty",
+      "InstallCommand": "npm install"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "esa.jsonc installCommand、buildCommand、assets.directory覆盖控制台",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite-jsonc-installCommand-empty",
+      "InstallCommand": "unknown command",
+      "BuildCommand": "unknown command",
+      "AssetsDirectory": "unknown"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "不存在package.json，但有BuildCommand",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite-without-package",
+      "BuildCommand": "npm run build"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "FAIL",
+    "requireLogTextList": [
+      "Cannot find package.json or installCommand is empty, skipping installation..."
+    ]
+  },
+  {
+    "name": "不存在package.json，且没有BuildCommand",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite-without-package",
+      "BuildCommand": "npm run build"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "FAIL",
+    "requireLogTextList": [
+      "Both assets and function js file are not found"
+    ]
+  },
+  {
+    "name": "特别小的ZipSizeQuota",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite",
+      "ZipSizeQuota": "0"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "FAIL",
+    "requireLogTextList": [
+      "Max zip size exceeds limit"
+    ]
+  },
+  {
+    "name": "特别小的FileCountQuota",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite",
+      "FileCountQuota": "1"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "FAIL",
+    "requireLogTextList": [
+      "Total file count exceeds limit"
+    ]
+  },
+  {
+    "name": "特别小的FileSizeQuota",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite",
+      "FileSizeQuota": "0"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "FAIL",
+    "requireLogTextList": [
+      "Max file size exceeds limit"
+    ]
+  },
+  {
+    "name": "assets目录、erEntry不存在",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite",
+      "AssetsDirectory": "unknown"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "FAIL",
+    "requireLogTextList": [
+      "Assets directory not set, skipping..",
+      "Both assets and function js file are not found"
+    ]
+  },
+  {
+    "name": "设置了skipFunctionBuild，必失败的js跳过构建了,结果可以成功",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite-with-skip-bad-er"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Build artifacts generated successfully"
+    ]
+  },
+  {
+    "name": "正常构建，非生产分支",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite",
+      "ProductionBranch": "fake-branch"
     },
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",

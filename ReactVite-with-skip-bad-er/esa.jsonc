@@ -1,0 +1,9 @@
+{
+  "name": "vite-react-template",
+  "installCommand": "pnpm install",
+  "assets": {
+    "directory": "./dist",
+    "notFoundStrategy": "singlePageApplication"
+  },
+  "skipFunctionBuild": true
+}
