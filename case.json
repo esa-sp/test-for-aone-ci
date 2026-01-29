@@ -6,7 +6,7 @@
       "TemplateName": "$RANDOM"
     },
     "repoName": "",
-    "requireStatus": "",
+    "requireStatus": "FAIL",
     "requireLogTextList": [
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
@@ -18,7 +18,7 @@
       "RootDirectory": "/ReactVite"
     },
     "repoName": "test-for-aone-ci",
-    "requireStatus": "",
+    "requireStatus": "SUCCESS",
     "requireLogTextList": [
       "Going to install pnpm",
       "<<LOG>>step|buildEnd<</LOG>>"
@@ -32,7 +32,7 @@
       "RootDirectory": "/ReactVite"
     },
     "repoName": "test-for-aone-ci",
-    "requireStatus": "",
+    "requireStatus": "SUCCESS",
     "requireLogTextList": [
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
