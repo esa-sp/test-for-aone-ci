@@ -109,13 +109,13 @@
   {
     "name": "创建新仓库但仓库已存在",
     "envs": {
-      "ERName": "cold-queen-2685",
+      "ERName": "spring-river-7555",
       "TemplateName": "$RANDOM"
     },
     "repoName": "",
-    "requireStatus": "",
+    "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Repository esa-sp/cold-queen-2685 cloned successfully.`"]
+      "Repository esa-sp/spring-river-7555 cloned successfully.`"]
   },
   {
     "name": "esa.jsonc installCommand为空字符串，但控制台不为空",
@@ -125,9 +125,9 @@
       "InstallCommand": "npm install"
     },
     "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
+    "requireStatus": "FAIL",
     "requireLogTextList": [
-      "<<LOG>>step|buildEnd<</LOG>>"
+      "Cannot find package.json or installCommand is empty, skipping installation"
     ]
   },
   {
@@ -162,7 +162,8 @@
     "name": "不存在package.json，且没有BuildCommand",
     "envs": {
       "ERName": "test-for-aone-ci",
-      "RootDirectory": "/ReactVite-without-package"
+      "RootDirectory": "/ReactVite-without-package",
+      "BuildCommand": ""
     },
     "repoName": "test-for-aone-ci",
     "requireStatus": "FAIL",
