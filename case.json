@@ -109,7 +109,8 @@
   {
     "name": "创建新仓库但仓库已存在",
     "envs": {
-      "ERName": "cold-queen-2685"
+      "ERName": "cold-queen-2685",
+      "TemplateName": "$RANDOM"
     },
     "repoName": "",
     "requireStatus": "",
@@ -133,7 +134,7 @@
     "name": "esa.jsonc installCommand、buildCommand、assets.directory覆盖控制台",
     "envs": {
       "ERName": "test-for-aone-ci",
-      "RootDirectory": "/ReactVite-jsonc-installCommand-empty",
+      "RootDirectory": "/ReactVite",
       "InstallCommand": "unknown command",
       "BuildCommand": "unknown command",
       "AssetsDirectory": "unknown"
@@ -161,8 +162,7 @@
     "name": "不存在package.json，且没有BuildCommand",
     "envs": {
       "ERName": "test-for-aone-ci",
-      "RootDirectory": "/ReactVite-without-package",
-      "BuildCommand": "npm run build"
+      "RootDirectory": "/ReactVite-without-package"
     },
     "repoName": "test-for-aone-ci",
     "requireStatus": "FAIL",
@@ -213,8 +213,9 @@
     "name": "assets目录、erEntry不存在",
     "envs": {
       "ERName": "test-for-aone-ci",
-      "RootDirectory": "/ReactVite",
-      "AssetsDirectory": "unknown"
+      "RootDirectory": "/ReactVite-without-esajsonc",
+      "AssetsDirectory": "",
+      "ErEntry": ""
     },
     "repoName": "test-for-aone-ci",
     "requireStatus": "FAIL",
