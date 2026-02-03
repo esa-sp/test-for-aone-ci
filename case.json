@@ -245,7 +245,7 @@
       "ERName": "test-for-aone-ci",
       "RootDirectory": "/ReactVite-without-esajsonc",
       "AssetsDirectory": "",
-      "ErEntry": "index.js"
+      "EREntry": "index.js"
     },
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
