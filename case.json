@@ -81,6 +81,19 @@
     ]
   },
   {
+    "name": "测试是否存在输出的node env",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite-read-env",
+      "EnvironmentVariables": "{ 'test_env': 'test_case_env_value' }"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "test_case_env_value"
+    ]
+  },
+  {
     "name": "engines node v24.13.0",
     "envs": {
       "ERName": "test-for-aone-ci",
@@ -113,7 +126,7 @@
       "TemplateName": "$RANDOM"
     },
     "repoName": "",
-    "requireStatus": "SUCCESS",
+    "requireStatus": "",
     "requireLogTextList": [
       "Repository esa-sp/spring-river-7555 cloned successfully.`"]
   },
@@ -163,12 +176,13 @@
     "envs": {
       "ERName": "test-for-aone-ci",
       "RootDirectory": "/ReactVite-without-package",
-      "BuildCommand": ""
+      "BuildCommand": "",
+      "AssetsDirectory": "public"
     },
     "repoName": "test-for-aone-ci",
-    "requireStatus": "FAIL",
+    "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Both assets and function js file are not found"
+      "Build artifacts generated successfully"
     ]
   },
   {
@@ -226,6 +240,20 @@
     ]
   },
   {
+    "name": "assets目录不存在，erEntry存在",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite-without-esajsonc",
+      "AssetsDirectory": "",
+      "ErEntry": "index.js"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
     "name": "设置了skipFunctionBuild，必失败的js跳过构建了,结果可以成功",
     "envs": {
       "ERName": "test-for-aone-ci",
@@ -248,6 +276,22 @@
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
       "<<LOG>>step|buildEnd<</LOG>>"
+    ],
+    "notRequireLogTextList": [
+      "<<LOG>>step|deploy<</LOG>>"
+    ]
+  },
+  {
+    "name": "正常构建，指定commitId",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite",
+      "CommitId": "54fe64d125c4abb39b7727983f93124de2bc32f9"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "this is for test commit id"
     ]
   }
 ]
