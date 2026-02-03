@@ -128,7 +128,7 @@
     "repoName": "",
     "requireStatus": "",
     "requireLogTextList": [
-      "Repository esa-sp/spring-river-7555 cloned successfully.`"]
+      "Repository esa-sp/spring-river-7555 cloned successfully."]
   },
   {
     "name": "esa.jsonc installCommand为空字符串，但控制台不为空",
