@@ -85,7 +85,7 @@
     "envs": {
       "ERName": "test-for-aone-ci",
       "RootDirectory": "/ReactVite-read-env",
-      "EnvironmentVariables": "{ 'test_env': 'test_case_env_value' }"
+      "EnvironmentVariables": "{ \"test_env\": \"test_case_env_value\" }"
     },
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
