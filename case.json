@@ -35,7 +35,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Going to install bun latest version",
+      "Going to install bun",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
   },
@@ -295,7 +295,7 @@
     ]
   },
   {
-    "name": "后端框架：Express（listen 风格）触发 backend-runtime 路径",
+    "name": "Express 项目（写了 app.listen）能正确识别并打包为后端",
     "envs": {
       "ERName": "test-for-aone-ci",
       "RootDirectory": "/Express-listen",
@@ -314,7 +314,7 @@
     ]
   },
   {
-    "name": "后端框架：Hono（fetch 风格）触发 backend-runtime 路径",
+    "name": "Hono 项目（用 fetch 风格导出）能正确识别并打包为后端",
     "envs": {
       "ERName": "test-for-aone-ci",
       "RootDirectory": "/Hono-app",
@@ -333,7 +333,7 @@
     ]
   },
   {
-    "name": "后端框架：Koa（listen 风格）触发 backend-runtime 路径",
+    "name": "Koa 项目能正确识别并打包为后端",
     "envs": {
       "ERName": "test-for-aone-ci",
       "RootDirectory": "/Koa-app",
@@ -352,7 +352,7 @@
     ]
   },
   {
-    "name": "FC handler 模式：无后端框架 + /api/ 有静态 handler",
+    "name": "纯 API 项目（无框架，只有 /api 下几个 handler 文件）能自动起多路由 dispatcher",
     "envs": {
       "ERName": "test-for-aone-ci",
       "RootDirectory": "/FcHandlers-basic",
@@ -374,7 +374,7 @@
     ]
   },
   {
-    "name": "FC handler 模式：动态路由 [id] / [...slug] / 静态优先",
+    "name": "/api 支持动态路径：用户参数 [id]、任意深度 [...slug]，静态路径优先匹配",
     "envs": {
       "ERName": "test-for-aone-ci",
       "RootDirectory": "/FcHandlers-dynamic",
@@ -396,7 +396,7 @@
     ]
   },
   {
-    "name": "FC handler 模式：路由冲突时 build 失败",
+    "name": "/api 下两个文件名编出同一个路径时，构建直接失败并指出冲突文件",
     "envs": {
       "ERName": "test-for-aone-ci",
       "RootDirectory": "/FcHandlers-conflict",
@@ -415,7 +415,7 @@
     ]
   },
   {
-    "name": "分支优先级：同时有后端框架 + /api/ 时优先 backend 模式",
+    "name": "项目同时有 Express 和 /api 目录时，优先走后端框架（让框架自己处理 /api）",
     "envs": {
       "ERName": "test-for-aone-ci",
       "RootDirectory": "/Express-with-api",
@@ -434,6 +434,138 @@
     "notRequireLogTextList": [
       "No backend framework but /api/ has FC handler files",
       "FC handlers zip created"
+    ]
+  },
+  {
+    "name": "Express 项目（不调 listen、直接 module.exports = app）也能识别并打包",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/Express-export",
+      "InstallCommand": "npm install --no-audit --no-fund",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Detected backend project \\(framework: Express\\)",
+      "Backend zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "Fastify 项目能正确识别并打包为后端",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/Fastify-app",
+      "InstallCommand": "npm install --no-audit --no-fund",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Detected backend project \\(framework: Fastify\\)",
+      "Backend zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "NestJS 项目（入口在 src/main.ts）能正确识别并打包",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/NestJS-app",
+      "InstallCommand": "npm install --no-audit --no-fund",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Detected backend project \\(framework: NestJS\\)",
+      "Backend zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "Express 项目带 views/ 模板时，模板文件会自动跟着打包（避免线上 404）",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/Express-with-views",
+      "InstallCommand": "npm install --no-audit --no-fund",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Detected backend project \\(framework: Express\\)",
+      "nft trace finished:",
+      "Backend zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "项目同时有 server.js 和 app.js 时，能选中真正 require 框架的那个作为入口",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/Express-disambig",
+      "InstallCommand": "npm install --no-audit --no-fund",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Detected backend project \\(framework: Express\\)",
+      "Backend zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "/api 用 index.js 当父路径入口（api/users/index.js 对应 URL /api/users）",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/FcHandlers-index",
+      "InstallCommand": "",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "No backend framework but /api/ has FC handler files",
+      "fc-bundle finished: 2 routes",
+      "route: \\^/api/\\?\\$",
+      "route: \\^/api/users/\\?\\$",
+      "FC handlers zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "/api 用 [[...slug]] 文件名实现可选通配（同时匹配 /api 和 /api/任意/路径）",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/FcHandlers-optional",
+      "InstallCommand": "",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "No backend framework but /api/ has FC handler files",
+      "fc-bundle finished: 1 routes",
+      "route: \\^/api\\(\\?:/\\(\\.\\+\\?\\)\\)\\?/\\?\\$",
+      "FC handlers zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
     ]
   }
 ]

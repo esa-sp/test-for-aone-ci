@@ -189,9 +189,14 @@ ReactVite-<场景>/
 | Fixture | 框架 / 风格 | 期望 framework slug | 适合测 |
 |---|---|---|---|
 | `Express-listen` | Express + `app.listen(8080)` | `express` | Express 探测 + listen 风格走 backend 路径 |
+| `Express-export` | Express + `module.exports = app`（无 listen） | `express` | Express export 风格 → start.js 走"导出函数 → createServer"分支 |
+| `Express-with-views` | Express + `views/home.ejs` + `views/partials/header.ejs` | `express` | views/ 自动 includeFiles（FRAMEWORK_INCLUDE_DIRS） |
+| `Express-disambig` | `server.js`（无 import）+ `app.js`（import express） | `express` | inferEntry 的 import regex 二次校验，选 app.js |
+| `Express-with-api` | Express + `/api/foo.js` 共存 | `express` | 分支优先级：有框架时 backend 优先于 fc-handlers |
 | `Hono-app` | Hono + `module.exports = app`（fetch 风格） | `hono` | Hono 探测 + Web fetch 风格走 backend 路径 |
 | `Koa-app` | Koa + `app.listen(3000)` | `koa` | Koa 探测 + listen 风格走 backend 路径 |
-| `Express-with-api` | Express + `/api/foo.js` 共存 | `express` | 分支优先级：有框架时 backend 优先于 fc-handlers |
+| `Fastify-app` | Fastify + `fastify.listen({ port })` | `fastify` | Fastify 探测 |
+| `NestJS-app` | NestJS + `src/main.ts`（FRAMEWORK_ENTRY_CANDIDATES 特化） | `nestjs` | NestJS 探测 + 框架特化的 entry 候选位置 |
 
 ### 6.3 FC handler fixture（packFcHandlers 路径）
 
@@ -201,7 +206,9 @@ ReactVite-<场景>/
 |---|---|---|
 | `FcHandlers-basic` | `foo.js`（Node 经典）+ `health.js`（fetch 对象）+ `items.js`（命名 GET/POST） | fc-handlers 模式触发 + 三种 handler 风格识别 |
 | `FcHandlers-dynamic` | `users/profile.js` + `users/[id].js` + `posts/[...slug].js` | 动态路由编译 + 静态优先 + routes 数量 |
-| `FcHandlers-conflict` | `[id].js` + `[name].js`（同 PCRE） | 路由冲突 build 失败 |
+| `FcHandlers-index` | `index.js` + `users/index.js` | 末尾 index 折叠到父目录路径 |
+| `FcHandlers-optional` | `[[...slug]].js` | 末尾可选 catch-all（既匹配 `/api`，又匹配 `/api/<任意深度>`） |
+| `FcHandlers-conflict` | `[id].js` + `[name].js`（同 PCRE） | 路由冲突 build 失败（FAIL 状态 case） |
 
 ## 7. 反模式（不要这么干）
 
