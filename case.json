@@ -49,7 +49,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "install yarn successfully",
+      "Install yarn successfully",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
   },
