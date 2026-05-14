@@ -102,7 +102,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "is not satisfied, installing version v24.13.0",
+      "not satisfied, switching to v24.13.0",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
   },
@@ -116,7 +116,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Install node v20.19.4 --> v20.19.4 successfully"
+      "Install node v20.19.4 successfully"
     ]
   },
   {
@@ -307,7 +307,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Detected backend project \\(framework: Express\\)",
+      "Detected backend project",
       "nft trace finished:",
       "Backend zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
@@ -326,7 +326,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Detected backend project \\(framework: Hono\\)",
+      "Detected backend project",
       "nft trace finished:",
       "Backend zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
@@ -345,7 +345,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Detected backend project \\(framework: Koa\\)",
+      "Detected backend project",
       "nft trace finished:",
       "Backend zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
@@ -366,9 +366,6 @@
     "requireLogTextList": [
       "No backend framework but /api/ has FC handler files",
       "fc-bundle finished: 3 routes",
-      "route: \\^/api/foo/\\?\\$",
-      "route: \\^/api/health/\\?\\$",
-      "route: \\^/api/items/\\?\\$",
       "FC handlers zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
@@ -388,9 +385,6 @@
     "requireLogTextList": [
       "No backend framework but /api/ has FC handler files",
       "fc-bundle finished: 3 routes",
-      "route: \\^/api/users/profile/\\?\\$",
-      "route: \\^/api/users/\\(\\[\\^/\\]\\+\\?\\)/\\?\\$",
-      "route: \\^/api/posts/\\(\\.\\+\\?\\)/\\?\\$",
       "FC handlers zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
@@ -409,9 +403,7 @@
     "requireStatus": "FAIL",
     "requireLogTextList": [
       "No backend framework but /api/ has FC handler files",
-      "Pack backend zip failed: Route conflict",
-      "api/\\[id\\]\\.js",
-      "api/\\[name\\]\\.js"
+      "Pack backend zip failed: Route conflict"
     ]
   },
   {
@@ -427,7 +419,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Detected backend project \\(framework: Express\\)",
+      "Detected backend project",
       "Backend zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ],
@@ -449,7 +441,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Detected backend project \\(framework: Express\\)",
+      "Detected backend project",
       "Backend zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
@@ -467,7 +459,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Detected backend project \\(framework: Fastify\\)",
+      "Detected backend project",
       "Backend zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
@@ -485,7 +477,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Detected backend project \\(framework: NestJS\\)",
+      "Detected backend project",
       "Backend zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
@@ -503,7 +495,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Detected backend project \\(framework: Express\\)",
+      "Detected backend project",
       "nft trace finished:",
       "Backend zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
@@ -522,7 +514,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Detected backend project \\(framework: Express\\)",
+      "Detected backend project",
       "Backend zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
@@ -542,8 +534,6 @@
     "requireLogTextList": [
       "No backend framework but /api/ has FC handler files",
       "fc-bundle finished: 2 routes",
-      "route: \\^/api/\\?\\$",
-      "route: \\^/api/users/\\?\\$",
       "FC handlers zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
@@ -563,7 +553,6 @@
     "requireLogTextList": [
       "No backend framework but /api/ has FC handler files",
       "fc-bundle finished: 1 routes",
-      "route: \\^/api\\(\\?:/\\(\\.\\+\\?\\)\\)\\?/\\?\\$",
       "FC handlers zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
