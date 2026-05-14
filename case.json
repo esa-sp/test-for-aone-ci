@@ -293,5 +293,147 @@
     "requireLogTextList": [
       "this is for test commit id"
     ]
+  },
+  {
+    "name": "后端框架：Express（listen 风格）触发 backend-runtime 路径",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/Express-listen",
+      "InstallCommand": "npm install --no-audit --no-fund",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Detected backend project \\(framework: Express\\)",
+      "nft trace finished:",
+      "Backend zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "后端框架：Hono（fetch 风格）触发 backend-runtime 路径",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/Hono-app",
+      "InstallCommand": "npm install --no-audit --no-fund",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Detected backend project \\(framework: Hono\\)",
+      "nft trace finished:",
+      "Backend zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "后端框架：Koa（listen 风格）触发 backend-runtime 路径",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/Koa-app",
+      "InstallCommand": "npm install --no-audit --no-fund",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Detected backend project \\(framework: Koa\\)",
+      "nft trace finished:",
+      "Backend zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "FC handler 模式：无后端框架 + /api/ 有静态 handler",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/FcHandlers-basic",
+      "InstallCommand": "",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "No backend framework but /api/ has FC handler files",
+      "fc-bundle finished: 3 routes",
+      "route: \\^/api/foo/\\?\\$",
+      "route: \\^/api/health/\\?\\$",
+      "route: \\^/api/items/\\?\\$",
+      "FC handlers zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "FC handler 模式：动态路由 [id] / [...slug] / 静态优先",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/FcHandlers-dynamic",
+      "InstallCommand": "",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "No backend framework but /api/ has FC handler files",
+      "fc-bundle finished: 3 routes",
+      "route: \\^/api/users/profile/\\?\\$",
+      "route: \\^/api/users/\\(\\[\\^/\\]\\+\\?\\)/\\?\\$",
+      "route: \\^/api/posts/\\(\\.\\+\\?\\)/\\?\\$",
+      "FC handlers zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "FC handler 模式：路由冲突时 build 失败",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/FcHandlers-conflict",
+      "InstallCommand": "",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "FAIL",
+    "requireLogTextList": [
+      "No backend framework but /api/ has FC handler files",
+      "Pack backend zip failed: Route conflict",
+      "api/\\[id\\]\\.js",
+      "api/\\[name\\]\\.js"
+    ]
+  },
+  {
+    "name": "分支优先级：同时有后端框架 + /api/ 时优先 backend 模式",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/Express-with-api",
+      "InstallCommand": "npm install --no-audit --no-fund",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Detected backend project \\(framework: Express\\)",
+      "Backend zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ],
+    "notRequireLogTextList": [
+      "No backend framework but /api/ has FC handler files",
+      "FC handlers zip created"
+    ]
   }
 ]
