@@ -556,5 +556,23 @@
       "FC handlers zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
+  },
+  {
+    "name": "综合项目（前端 + ER + 后端 + 完整 esa.jsonc）走通整个 TestStep 流程",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/Fullstack-react-express"
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Framework detection \\(all matched\\):",
+      "express",
+      "Detected backend project \\(framework: Express\\)",
+      "nft trace finished:",
+      "Backend zip created:",
+      "Build artifacts generated successfully",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
   }
 ]
