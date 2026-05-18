@@ -1,6 +1,6 @@
 {
   "name": "vite-react-template",
-  "installCommand": "bun install",
+  "installCommand": "npm install",
   "buildCommand": "npm run build",
   "assets": {
     "directory": "./dist",

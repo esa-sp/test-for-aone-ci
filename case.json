@@ -566,9 +566,9 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Framework detection \\(all matched\\):",
+      "Framework detection (all matched):",
       "express",
-      "Detected backend project \\(framework: Express\\)",
+      "Detected backend project (framework: Express)",
       "nft trace finished:",
       "Backend zip created:",
       "Build artifacts generated successfully",
