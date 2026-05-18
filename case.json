@@ -286,7 +286,7 @@
     "envs": {
       "ERName": "test-for-aone-ci",
       "RootDirectory": "/ReactVite",
-      "CommitId": "54fe64d125c4abb39b7727983f93124de2bc32f9"
+      "CommitId": "b4aae89b3228f8c690ee961ce64ca91cd1b2d245"
     },
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
