@@ -6,7 +6,7 @@
 |---|---|---|
 | 前端 assets | `npm run build` 走 vite build → `dist/` | `index.zip` 内 `assets/` |
 | ER 函数 | `edge.ts` 经 esbuild 编译 | `index.zip` 内 `routine/index.js` |
-| 后端容器 | Express 项目（`server.js` + `node_modules/express`） | `index.zip` 内 `fc/code.zip` + `fc/conf.jsonc` |
+| 后端容器 | Express 项目（`server.cjs` + `node_modules/express`） | `index.zip` 内 `fc/code.zip` + `fc/conf.jsonc` |
 
 ## 测试目标
 
@@ -15,7 +15,7 @@
 1. install 全部依赖（前端 + 后端）
 2. `npm run build` 生成前端 `dist/`
 3. **`packBackendCode` 通过 `detector.detectAll()` 识别 Express**（是 detect→detectAll 改造的关键验证）
-4. backend-runtime 的 nft trace 把 Express + server.js 打成 `fc/code.zip`
+4. backend-runtime 的 nft trace 把 Express + server.cjs 打成 `fc/code.zip`
 5. ER 函数 `edge.ts` esbuild 编译进 `routine/`
 6. `dist/` 拷进 `assets/`
 7. 三者一起进 `index.zip`
@@ -41,9 +41,18 @@ CI 上跑这条 case 的 requireLogTextList 应包含：
 
 ## 不部署也能验证 backend-runtime 行为
 
-如果想本地验后端打包流程，可以单独把 `server.js` 当独立 Express 项目跑：
+如果想本地验后端打包流程，可以单独把 `server.cjs` 当独立 Express 项目跑：
 
 ```bash
-node_modules/.bin/node server.js   # 装完依赖后
+node_modules/.bin/node server.cjs   # 装完依赖后
 curl http://localhost:8080/api/health
 ```
+
+## 为啥 backend 是 `.cjs` 不是 `.js`
+
+`package.json` 有 `"type": "module"`（vite 前端需要）。Node 在 type:module 下会把所有 `.js` 当 ESM 解析 ——
+但 `server.cjs` 用 CJS 写法（`const express = require('express')`），如果叫 `.js` 会直接报 `require is not defined`。
+
+`.cjs` 后缀**强制 CJS 解析**，绕过 type 字段冲突。这是 fullstack 项目混合 ESM 前端 + CJS 后端的标准做法。
+
+想统一用 ESM？把 `server.cjs` 改成 `server.js`（自动 ESM），内容改成 `import express from 'express'` + `export default app`，效果一样。
