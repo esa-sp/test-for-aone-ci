@@ -1,0 +1,14 @@
+{
+  "name": "NestJS bootstrap (decorators, TS → dist/main.js)",
+  "framework": "nestjs",
+  "mode": "direct",
+  "entry": "dist/main.js",
+  "port": 3000,
+  "warmupTimeoutMs": 15000,
+  "assertions": [
+    { "path": "/api/health", "expectedStatus": 200, "bodyJsonSubset": { "ok": true, "framework": "nestjs" } },
+    { "path": "/api/users/42", "expectedStatus": 200, "bodyJsonSubset": { "user": "42", "source": "nestjs" } },
+    { "path": "/api/echo", "method": "POST", "headers": { "content-type": "application/json" }, "body": { "k": "v" }, "expectedStatus": 201, "bodyJsonSubset": { "received": { "k": "v" } } },
+    { "path": "/api/nope", "expectedStatus": 404 }
+  ]
+}

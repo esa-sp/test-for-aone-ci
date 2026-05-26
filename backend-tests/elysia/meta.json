@@ -1,0 +1,13 @@
+{
+  "name": "Elysia + Web fetch handler",
+  "framework": "elysia",
+  "mode": "direct",
+  "entry": "app.js",
+  "port": 3000,
+  "assertions": [
+    { "path": "/api/health", "expectedStatus": 200, "bodyJsonSubset": { "ok": true, "framework": "elysia" } },
+    { "path": "/api/users/42", "expectedStatus": 200, "bodyJsonSubset": { "user": "42", "source": "elysia" } },
+    { "path": "/api/echo", "method": "POST", "headers": { "content-type": "application/json" }, "body": { "k": "v" }, "expectedStatus": 200, "bodyJsonSubset": { "received": { "k": "v" } } },
+    { "path": "/api/nope", "expectedStatus": 404 }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "Egg + egg-scripts spawn",
+  "framework": "egg",
+  "mode": "spawn",
+  "port": 3000,
+  "warmupTimeoutMs": 20000,
+  "readySignal": "egg started",
+  "spawnCommand": [
+    "node",
+    "node_modules/egg-scripts/bin/egg-scripts.js",
+    "start",
+    "--port=$PORT",
+    "--workers=1",
+    "--daemon=false"
+  ],
+  "includeDirs": ["node_modules"],
+  "assertions": [
+    { "path": "/api/health", "expectedStatus": 200, "bodyJsonSubset": { "ok": true, "framework": "egg" } },
+    { "path": "/api/users/42", "expectedStatus": 200, "bodyJsonSubset": { "user": "42", "source": "egg" } },
+    { "path": "/api/echo", "method": "POST", "headers": { "content-type": "application/json" }, "body": { "k": "v" }, "expectedStatus": 200, "bodyJsonSubset": { "received": { "k": "v" } } },
+    { "path": "/api/nope", "expectedStatus": 404 }
+  ]
+}

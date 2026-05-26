@@ -1,0 +1,12 @@
+{
+  "name": "nuxt-backend-test",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "postinstall": "nuxt prepare && nuxt build"
+  },
+  "dependencies": {
+    "nuxt": "^3.14.0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "midway-backend-test",
+  "version": "0.0.0",
+  "private": true,
+  "main": "bootstrap.js",
+  "scripts": {
+    "build": "tsc -p .",
+    "postinstall": "tsc -p ."
+  },
+  "dependencies": {
+    "@midwayjs/bootstrap": "^3.0.0",
+    "@midwayjs/core": "^3.0.0",
+    "@midwayjs/koa": "^3.0.0",
+    "@midwayjs/logger": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

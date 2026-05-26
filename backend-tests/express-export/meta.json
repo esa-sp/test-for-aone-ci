@@ -1,0 +1,13 @@
+{
+  "name": "Express + module.exports = app（无 listen）",
+  "framework": "express",
+  "mode": "direct",
+  "entry": "app.js",
+  "port": 3000,
+  "assertions": [
+    { "path": "/api/health", "expectedStatus": 200, "bodyJsonSubset": { "ok": true, "flavor": "export" } },
+    { "path": "/api/users/42", "expectedStatus": 200, "bodyJsonSubset": { "user": "42", "source": "express-export" } },
+    { "path": "/api/echo", "method": "POST", "headers": { "content-type": "application/json" }, "body": { "k": "v" }, "expectedStatus": 200, "bodyJsonSubset": { "received": { "k": "v" } } },
+    { "path": "/api/nope", "expectedStatus": 404 }
+  ]
+}
