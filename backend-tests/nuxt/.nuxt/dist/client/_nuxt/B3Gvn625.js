@@ -1,1 +1,0 @@
-import{_ as r,d as o,b as n,q as t}from"./CSmYw2Hs.js";const l={};function s(a,e){return t(),o("div",null,[...e[0]||(e[0]=[n("h1",null,"Hello from Nuxt SSR",-1),n("p",null,"Framework: nuxt",-1)])])}const u=r(l,[["render",s]]);export{u as default};
