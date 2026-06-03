@@ -1,0 +1,17 @@
+{
+  "name": "NestJS 多模块 (Guards + Pipes + Interceptors)",
+  "framework": "nestjs",
+  "mode": "direct",
+  "entry": "dist/main.js",
+  "port": 3000,
+  "warmupTimeoutMs": 20000,
+  "assertions": [
+    { "path": "/api/health", "expectedStatus": 200, "bodyJsonSubset": { "ok": true, "framework": "nestjs", "modules": ["users", "products"] } },
+    { "path": "/api/users/10", "expectedStatus": 200, "bodyJsonSubset": { "id": 10, "name": "user-10" } },
+    { "path": "/api/users", "method": "POST", "headers": { "content-type": "application/json", "x-api-key": "secret" }, "body": { "name": "alice", "email": "a@b.com" }, "expectedStatus": 201, "bodyJsonSubset": { "name": "alice", "email": "a@b.com" } },
+    { "path": "/api/users", "method": "POST", "headers": { "content-type": "application/json" }, "body": { "name": "bob" }, "expectedStatus": 403 },
+    { "path": "/api/products", "expectedStatus": 200, "bodyJsonSubset": { "total": 3 } },
+    { "path": "/api/products/1", "expectedStatus": 200, "bodyJsonSubset": { "id": 1 } },
+    { "path": "/nope", "expectedStatus": 404 }
+  ]
+}

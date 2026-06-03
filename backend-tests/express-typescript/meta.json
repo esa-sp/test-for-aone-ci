@@ -1,0 +1,15 @@
+{
+  "name": "Express + TypeScript (tsconfig outDir)",
+  "framework": "express",
+  "mode": "direct",
+  "entry": "dist/index.js",
+  "port": 3000,
+  "warmupTimeoutMs": 10000,
+  "assertions": [
+    { "path": "/api/health", "expectedStatus": 200, "bodyJsonSubset": { "ok": true, "framework": "express", "lang": "typescript" } },
+    { "path": "/api/users/7", "expectedStatus": 200, "bodyJsonSubset": { "id": 7, "name": "user-7" } },
+    { "path": "/api/users", "method": "POST", "headers": { "content-type": "application/json" }, "body": { "name": "bob", "email": "bob@test.com" }, "expectedStatus": 201, "bodyJsonSubset": { "name": "bob", "email": "bob@test.com" } },
+    { "path": "/api/config", "expectedStatus": 200, "bodyJsonSubset": { "env": "test" } },
+    { "path": "/nope", "expectedStatus": 404 }
+  ]
+}

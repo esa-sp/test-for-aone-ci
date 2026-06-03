@@ -1,0 +1,16 @@
+{
+  "name": "Fastify + 多插件注册 (register pattern)",
+  "framework": "fastify",
+  "mode": "direct",
+  "entry": "server.js",
+  "port": 3000,
+  "warmupTimeoutMs": 10000,
+  "assertions": [
+    { "path": "/api/health", "expectedStatus": 200, "bodyJsonSubset": { "ok": true, "framework": "fastify", "plugins": true } },
+    { "path": "/api/users/5", "expectedStatus": 200, "bodyJsonSubset": { "id": "5", "name": "user-5" } },
+    { "path": "/api/users", "method": "POST", "headers": { "content-type": "application/json" }, "body": { "name": "test" }, "expectedStatus": 201, "bodyJsonSubset": { "name": "test", "created": true } },
+    { "path": "/api/products?category=books", "expectedStatus": 200, "bodyJsonSubset": { "category": "books" } },
+    { "path": "/api/products/99", "expectedStatus": 200, "bodyJsonSubset": { "id": "99" } },
+    { "path": "/not-found", "expectedStatus": 404 }
+  ]
+}

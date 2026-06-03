@@ -1,0 +1,9 @@
+{
+  "name": "fastify-plugins-backend-test",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "fastify": "^4.26.0",
+    "@fastify/autoload": "^5.8.0"
+  }
+}

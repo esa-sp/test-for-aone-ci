@@ -1,0 +1,68 @@
+{
+  "name": "Express 多文件路由/中间件分离",
+  "framework": "express",
+  "mode": "direct",
+  "entry": "app.js",
+  "port": 3000,
+  "warmupTimeoutMs": 8000,
+  "assertions": [
+    {
+      "path": "/api/health",
+      "expectedStatus": 200,
+      "bodyJsonSubset": {
+        "ok": true,
+        "framework": "express"
+      }
+    },
+    {
+      "path": "/api/users/42",
+      "expectedStatus": 200,
+      "bodyJsonSubset": {
+        "id": "42",
+        "name": "user-42"
+      }
+    },
+    {
+      "path": "/api/users",
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json",
+        "x-api-key": "test-key"
+      },
+      "body": {
+        "name": "alice"
+      },
+      "expectedStatus": 201,
+      "bodyJsonSubset": {
+        "name": "alice",
+        "created": true
+      }
+    },
+    {
+      "path": "/api/users",
+      "method": "POST",
+      "headers": {
+        "content-type": "application/json"
+      },
+      "body": {
+        "name": "bob"
+      },
+      "expectedStatus": 401,
+      "bodyJsonSubset": {
+        "error": "unauthorized"
+      }
+    },
+    {
+      "path": "/api/items?page=2&size=5",
+      "expectedStatus": 200,
+      "bodyJsonSubset": {
+        "page": 2,
+        "size": 5
+      }
+    },
+    {
+      "path": "/not-exist",
+      "expectedStatus": 404
+    }
+  ]
+}
