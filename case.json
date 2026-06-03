@@ -588,7 +588,7 @@
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
-      "Framework detection \\(all matched\\):",
+      "Framework detection (all matched):",
       "nuxtjs",
       "Detected meta-framework",
       "meta-runtime pack finished:",
