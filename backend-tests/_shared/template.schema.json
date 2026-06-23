@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/template.schema.json",
+  "title": "backend-tests 模板元数据",
+  "description": "每个 fixture 的 template.json 描述控制台模板流所需的元信息。产品侧字段先占位，待控制台模板流注册机制确定后回填。",
+  "type": "object",
+  "required": ["templateName", "framework", "description", "category", "entry", "rootDirectory"],
+  "properties": {
+    "templateName": {
+      "type": "string",
+      "description": "控制台展示的模板名称"
+    },
+    "templateId": {
+      "type": "string",
+      "description": "模板唯一标识，占位 {{TEMPLATE_ID}}，待注册机制确定后回填"
+    },
+    "framework": {
+      "type": "string",
+      "description": "framework-checker 识别到的框架 slug",
+      "examples": ["express", "fastify", "koa", "hono", "h3", "elysia", "nestjs", "node"]
+    },
+    "description": {
+      "type": "string",
+      "description": "模板一句话描述"
+    },
+    "icon": {
+      "type": "string",
+      "description": "模板图标（emoji 或资源路径）"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["starter", "solution"],
+      "description": "starter=框架入门示例，solution=业务场景示例"
+    },
+    "entry": {
+      "type": "string",
+      "description": "后端入口文件"
+    },
+    "rootDirectory": {
+      "type": "string",
+      "description": "平台构建时的 RootDirectory",
+      "examples": ["/backend-tests/express-listen"]
+    },
+    "deployUrl": {
+      "type": "string",
+      "description": "一键部署链接，占位 {{DEPLOY_URL}}"
+    },
+    "demoUrl": {
+      "type": "string",
+      "description": "在线 Demo URL，占位 {{DEMO_URL}}"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "模板标签，用于控制台筛选"
+    }
+  }
+}

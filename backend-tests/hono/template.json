@@ -1,0 +1,13 @@
+{
+  "templateName": "Hono · 问候卡",
+  "templateId": "{{TEMPLATE_ID}}",
+  "framework": "hono",
+  "description": "Hono + Web Fetch API，演示中间件链、c.set/c.get 传值与 serveStatic 静态托管。",
+  "icon": "🔗",
+  "category": "starter",
+  "entry": "app.js",
+  "rootDirectory": "/backend-tests/hono",
+  "deployUrl": "{{DEPLOY_URL}}",
+  "demoUrl": "{{DEMO_URL}}",
+  "tags": ["hono", "web-fetch", "中间件", "问候卡"]
+}

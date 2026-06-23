@@ -7,6 +7,12 @@
   "warmupTimeoutMs": 8000,
   "assertions": [
     {
+      "path": "/",
+      "method": "GET",
+      "expectedStatus": 200,
+      "bodyContains": "Express"
+    },
+    {
       "path": "/api/health",
       "method": "GET",
       "expectedStatus": 200,
@@ -31,5 +37,6 @@
       "method": "GET",
       "expectedStatus": 404
     }
-  ]
+  ],
+  "includeDirs": ["public"]
 }

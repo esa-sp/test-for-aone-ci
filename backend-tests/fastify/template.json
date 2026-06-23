@@ -1,0 +1,13 @@
+{
+  "templateName": "Fastify + Schema 商品搜索",
+  "templateId": "{{TEMPLATE_ID}}",
+  "framework": "fastify",
+  "description": "Fastify + response schema 校验，演示类型安全的商品搜索 API 与 querystring 自动类型转换。",
+  "icon": "⚡",
+  "category": "starter",
+  "entry": "server.js",
+  "rootDirectory": "/backend-tests/fastify",
+  "deployUrl": "{{DEPLOY_URL}}",
+  "demoUrl": "{{DEMO_URL}}",
+  "tags": ["fastify", "schema", "类型校验", "商品搜索"]
+}

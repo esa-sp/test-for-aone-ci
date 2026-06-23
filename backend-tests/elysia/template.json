@@ -1,0 +1,13 @@
+{
+  "templateName": "Elysia · 类型安全表单",
+  "templateId": "{{TEMPLATE_ID}}",
+  "framework": "elysia",
+  "description": "Elysia + 链式 API + derive 类型安全注入，演示 Web Fetch handler 与 staticPlugin 静态托管。",
+  "icon": "💉",
+  "category": "starter",
+  "entry": "app.js",
+  "rootDirectory": "/backend-tests/elysia",
+  "deployUrl": "{{DEPLOY_URL}}",
+  "demoUrl": "{{DEMO_URL}}",
+  "tags": ["elysia", "derive", "类型安全", "表单"]
+}

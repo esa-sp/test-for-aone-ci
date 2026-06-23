@@ -14,15 +14,31 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
+const create_item_dto_1 = require("./create-item.dto");
 let AppController = class AppController {
     health() {
-        return { ok: true, framework: 'nestjs' };
+        return { ok: true, framework: 'nestjs', service: '资源管理', message: '服务运行中' };
     }
     user(id) {
-        return { user: id, source: 'nestjs' };
+        return { user: id, source: 'nestjs', name: `用户#${id}`, role: 'admin' };
     }
     echo(body) {
-        return { received: body };
+        return { received: body, echoed: true, timestamp: new Date().toISOString() };
+    }
+    // 资源列表
+    listItems() {
+        return {
+            total: 3,
+            items: [
+                { id: 1, name: '资源-A', price: 99 },
+                { id: 2, name: '资源-B', price: 199 },
+                { id: 3, name: '资源-C', price: 299 },
+            ],
+        };
+    }
+    // 创建资源 · ValidationPipe 自动校验 DTO（NestJS 特色）
+    createItem(dto) {
+        return { created: true, id: Date.now(), ...dto };
     }
 };
 exports.AppController = AppController;
@@ -46,6 +62,19 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "echo", null);
+__decorate([
+    (0, common_1.Get)('items'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "listItems", null);
+__decorate([
+    (0, common_1.Post)('items'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_item_dto_1.CreateItemDto]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "createItem", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)('api')
 ], AppController);

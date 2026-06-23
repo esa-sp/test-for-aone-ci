@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "fastify": "^4.26.0",
-    "@fastify/autoload": "^5.8.0"
+    "@fastify/autoload": "^5.8.0",
+    "@fastify/static": "^7.0.4"
   }
 }

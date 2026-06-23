@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Koa 后端示例 · backend-tests</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero"><div class="container">
+    <span class="badge-framework" id="badge-framework"></span>
+    <h1 id="hero-title"></h1>
+    <p class="tagline" id="hero-tagline"></p>
+    <div class="hero-actions" id="hero-actions"></div>
+  </div></header>
+  <section id="features-section"><div class="container">
+    <h2>框架特色写法</h2>
+    <p class="section-desc">洋葱模型中间件 · ctx 级联 · koa-static 静态托管。</p>
+    <div class="feature-grid" id="feature-grid"></div>
+  </div></section>
+  <section id="endpoints-section" style="background: var(--color-bg-soft);"><div class="container">
+    <h2>实时接口演示</h2>
+    <p class="section-desc">点击「试一试」直接调用本示例的 API（服务端输出访问日志）。</p>
+    <div class="endpoint-list" id="endpoint-list"></div>
+  </div></section>
+  <footer class="footer"><div class="container">
+    <h2>平台能力</h2>
+    <div class="tag-list" id="tag-list"></div>
+    <p class="footer-meta" id="footer-meta"></p>
+  </div></footer>
+  <script>
+    const PAGE_CONFIG = {
+      framework: "Koa", frameworkSlug: "koa",
+      tagline: "Koa + 洋葱模型中间件，演示 ctx 级联、访问日志与 koa-static 静态托管。",
+      deployUrl: "{{DEPLOY_URL}}", demoUrl: "{{DEMO_URL}}",
+      features: [
+        { icon: "🧅", title: "洋葱模型", desc: "async/await 中间件，await next() 前后分别执行，形成洋葱结构。" },
+        { icon: "📝", title: "访问日志", desc: "中间件自动记录 method/url/status/耗时，ctx 级联写入。" },
+        { icon: "🔗", title: "ctx 级联", desc: "ctx.body 赋值即响应，ctx.params / ctx.request.body 统一上下文。" },
+        { icon: "📄", title: "koa-static", desc: "插件静态托管 public/，平台用 includeDirs 兜底打包。" }
+      ],
+      endpoints: [
+        { method: "GET", path: "/api/health", desc: "健康检查 · 访问日志服务状态" },
+        { method: "GET", path: "/api/users/42", desc: "获取用户信息" },
+        { method: "POST", path: "/api/echo", desc: "回显请求体", body: { k: "v" } },
+        { method: "GET", path: "/api/nope", desc: "不存在的路径 · 返回 404" }
+      ],
+      productTags: ["零配置自动识别 Koa","nft 自动追踪依赖打包","includeDirs 兜底静态文件","端口自动拦截改写","一键部署到函数计算"]
+    };
+    const METHOD_CLASS = { GET: "get", POST: "post", PUT: "put", DELETE: "delete" };
+
+    function renderHero() {
+      document.getElementById("badge-framework").textContent = PAGE_CONFIG.framework;
+      document.title = PAGE_CONFIG.framework + " 后端示例 · backend-tests";
+      document.getElementById("hero-title").textContent = PAGE_CONFIG.framework + " 后端示例 · 访问日志";
+      document.getElementById("hero-tagline").textContent = PAGE_CONFIG.tagline;
+      const actions = document.getElementById("hero-actions");
+      const deploy = document.createElement("a");
+      deploy.className = "btn btn-primary"; deploy.href = PAGE_CONFIG.deployUrl;
+      deploy.textContent = "一键部署"; deploy.target = "_blank"; deploy.rel = "noopener";
+      actions.appendChild(deploy);
+      const demo = document.createElement("a");
+      demo.className = "btn btn-outline"; demo.href = PAGE_CONFIG.demoUrl;
+      demo.textContent = "在线 Demo"; demo.target = "_blank"; demo.rel = "noopener";
+      actions.appendChild(demo);
+    }
+
+    function renderFeatures() {
+      const grid = document.getElementById("feature-grid");
+      PAGE_CONFIG.features.forEach((f) => {
+        const card = document.createElement("div");
+        card.className = "feature-card";
+        card.innerHTML = '<div class="feat-icon">' + f.icon + "</div><h3>" + f.title + "</h3><p>" + f.desc + "</p>";
+        grid.appendChild(card);
+      });
+    }
+
+    function renderEndpoints() {
+      const list = document.getElementById("endpoint-list");
+      PAGE_CONFIG.endpoints.forEach((ep) => {
+        const card = document.createElement("div");
+        card.className = "endpoint-card";
+        const head = document.createElement("div");
+        head.className = "endpoint-head";
+        const tag = document.createElement("span");
+        tag.className = "method-tag " + (METHOD_CLASS[ep.method] || "get");
+        tag.textContent = ep.method;
+        const pathEl = document.createElement("span");
+        pathEl.className = "endpoint-path";
+        pathEl.textContent = ep.path;
+        head.appendChild(tag); head.appendChild(pathEl);
+        const desc = document.createElement("p");
+        desc.className = "endpoint-desc"; desc.textContent = ep.desc;
+        const actions = document.createElement("div");
+        actions.className = "endpoint-actions";
+        const btn = document.createElement("button");
+        btn.className = "btn btn-primary btn-sm"; btn.textContent = "试一试";
+        const respBox = document.createElement("div");
+        respBox.className = "response-box";
+        respBox.innerHTML = '<span class="resp-placeholder">点击「试一试」查看响应…</span>';
+        btn.addEventListener("click", () => callEndpoint(ep, respBox, btn));
+        actions.appendChild(btn);
+        card.appendChild(head); card.appendChild(desc);
+        if (ep.body) {
+          const bodyHint = document.createElement("p");
+          bodyHint.className = "endpoint-desc";
+          bodyHint.style.fontFamily = "var(--font-mono)";
+          bodyHint.textContent = "请求体: " + JSON.stringify(ep.body);
+          card.appendChild(bodyHint);
+        }
+        card.appendChild(actions); card.appendChild(respBox);
+        list.appendChild(card);
+      });
+    }
+
+    async function callEndpoint(ep, respBox, btn) {
+      const original = btn.textContent;
+      btn.textContent = "";
+      const spinner = document.createElement("span");
+      spinner.className = "spinner";
+      btn.appendChild(spinner);
+      btn.disabled = true;
+      respBox.innerHTML = "";
+      try {
+        const opts = { method: ep.method, headers: {} };
+        if (ep.body) {
+          opts.headers["content-type"] = "application/json";
+          opts.body = JSON.stringify(ep.body);
+        }
+        const res = await fetch(ep.path, opts);
+        const text = await res.text();
+        let pretty = text;
+        try { pretty = JSON.stringify(JSON.parse(text), null, 2); } catch (e) {}
+        const statusEl = document.createElement("span");
+        statusEl.className = "resp-status " + (res.ok ? "ok" : "err");
+        statusEl.textContent = res.status + " " + res.statusText;
+        respBox.appendChild(statusEl);
+        respBox.appendChild(document.createTextNode("\n" + pretty));
+      } catch (err) {
+        const statusEl = document.createElement("span");
+        statusEl.className = "resp-status err";
+        statusEl.textContent = "请求失败";
+        respBox.appendChild(statusEl);
+        respBox.appendChild(document.createTextNode("\n" + err.message));
+      } finally {
+        btn.disabled = false;
+        btn.textContent = original;
+      }
+    }
+
+    function renderFooter() {
+      const list = document.getElementById("tag-list");
+      PAGE_CONFIG.productTags.forEach((t) => {
+        const tag = document.createElement("span");
+        tag.className = "tag"; tag.textContent = t;
+        list.appendChild(tag);
+      });
+      document.getElementById("footer-meta").textContent =
+        "本示例由平台零配置打包部署 · 框架自动识别 · nft 依赖追踪";
+    }
+
+    renderHero(); renderFeatures(); renderEndpoints(); renderFooter();
+  </script>
+</body>
+</html>

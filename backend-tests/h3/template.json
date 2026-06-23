@@ -1,0 +1,13 @@
+{
+  "templateName": "H3 · 边缘计数器",
+  "templateId": "{{TEMPLATE_ID}}",
+  "framework": "h3",
+  "description": "H3 + eventHandler + toNodeListener，演示手动 fs 静态文件托管与边缘计数器 API。",
+  "icon": "⚡",
+  "category": "starter",
+  "entry": "server.js",
+  "rootDirectory": "/backend-tests/h3",
+  "deployUrl": "{{DEPLOY_URL}}",
+  "demoUrl": "{{DEMO_URL}}",
+  "tags": ["h3", "eventHandler", "手动fs", "边缘计数器"]
+}

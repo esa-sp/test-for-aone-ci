@@ -8,7 +8,7 @@ const userService = new UserService();
 // GET /api/users/:id — 公开接口
 router.get('/:id', (req, res) => {
   const user = userService.findById(req.params.id);
-  res.json(user);
+  res.json({ ...user, source: 'express-multifile' });
 });
 
 // POST /api/users — 需要认证

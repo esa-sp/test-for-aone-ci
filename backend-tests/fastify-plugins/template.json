@@ -1,0 +1,13 @@
+{
+  "templateName": "Fastify + 多插件注册",
+  "templateId": "{{TEMPLATE_ID}}",
+  "framework": "fastify",
+  "description": "Fastify register pattern，按业务域拆分插件、prefix 路由分组、服务层分离，配合 @fastify/static 托管演示页。",
+  "icon": "🧩",
+  "category": "starter",
+  "entry": "server.js",
+  "rootDirectory": "/backend-tests/fastify-plugins",
+  "deployUrl": "{{DEPLOY_URL}}",
+  "demoUrl": "{{DEMO_URL}}",
+  "tags": ["fastify", "register", "插件化", "分层架构"]
+}

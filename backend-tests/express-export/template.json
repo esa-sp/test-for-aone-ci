@@ -1,0 +1,13 @@
+{
+  "templateName": "Express + module.exports 留言板",
+  "templateId": "{{TEMPLATE_ID}}",
+  "framework": "express",
+  "description": "Express + module.exports 导出风格，演示 asyncHandler 异步路由与全局错误中间件。",
+  "icon": "📦",
+  "category": "starter",
+  "entry": "app.js",
+  "rootDirectory": "/backend-tests/express-export",
+  "deployUrl": "{{DEPLOY_URL}}",
+  "demoUrl": "{{DEMO_URL}}",
+  "tags": ["express", "module.exports", "asyncHandler", "留言板"]
+}

@@ -1,0 +1,13 @@
+{
+  "templateName": "NestJS + ValidationPipe 资源管理",
+  "templateId": "{{TEMPLATE_ID}}",
+  "framework": "nestjs",
+  "description": "NestJS + ValidationPipe + DTO，演示装饰器驱动的资源管理 API 与 class-validator 自动校验。",
+  "icon": "🎯",
+  "category": "starter",
+  "entry": "dist/main.js",
+  "rootDirectory": "/backend-tests/nestjs",
+  "deployUrl": "{{DEPLOY_URL}}",
+  "demoUrl": "{{DEMO_URL}}",
+  "tags": ["nestjs", "validation", "DTO", "资源管理"]
+}

@@ -4,6 +4,6 @@ import { Controller, Get } from '@nestjs/common';
 export class HealthController {
   @Get()
   check() {
-    return { ok: true, framework: 'nestjs', modules: ['users', 'products'] };
+    return { ok: true, framework: 'nestjs', modules: ['users', 'products'], service: 'RBAC权限', message: '服务运行中' };
   }
 }

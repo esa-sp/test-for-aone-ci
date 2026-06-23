@@ -1,0 +1,13 @@
+{
+  "templateName": "Express 多文件 · 任务管理",
+  "templateId": "{{TEMPLATE_ID}}",
+  "framework": "express",
+  "description": "Express 多文件架构，演示路由/中间件/Service 分层、API Key 鉴权与分页查询。",
+  "icon": "📁",
+  "category": "starter",
+  "entry": "app.js",
+  "rootDirectory": "/backend-tests/express-multifile",
+  "deployUrl": "{{DEPLOY_URL}}",
+  "demoUrl": "{{DEMO_URL}}",
+  "tags": ["express", "多文件", "鉴权", "任务管理"]
+}

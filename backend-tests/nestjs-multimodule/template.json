@@ -1,0 +1,13 @@
+{
+  "templateName": "NestJS 多模块 · RBAC 权限",
+  "templateId": "{{TEMPLATE_ID}}",
+  "framework": "nestjs",
+  "description": "NestJS 多模块架构，演示 ApiKeyGuard 鉴权、ParseIntPipe 参数校验与 ValidationPipe。",
+  "icon": "🧩",
+  "category": "starter",
+  "entry": "dist/main.js",
+  "rootDirectory": "/backend-tests/nestjs-multimodule",
+  "deployUrl": "{{DEPLOY_URL}}",
+  "demoUrl": "{{DEMO_URL}}",
+  "tags": ["nestjs", "多模块", "Guard", "RBAC"]
+}

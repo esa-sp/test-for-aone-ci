@@ -7,6 +7,12 @@
   "warmupTimeoutMs": 8000,
   "assertions": [
     {
+      "path": "/",
+      "method": "GET",
+      "expectedStatus": 200,
+      "bodyContains": "Express"
+    },
+    {
       "path": "/api/health",
       "expectedStatus": 200,
       "bodyJsonSubset": {
@@ -64,5 +70,6 @@
       "path": "/not-exist",
       "expectedStatus": 404
     }
-  ]
+  ],
+  "includeDirs": ["public"]
 }

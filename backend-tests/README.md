@@ -1,4 +1,47 @@
-# backend-tests
+# backend-tests · 后端框架示例项目集
+
+> 13 个后端框架示例项目，每个都是独立可跑、可一键部署的完整 demo。
+> 对标 Vercel / Cloudflare / EdgeOne 模板生态，展现平台零配置自动识别、nft 自动打包、一键部署到函数计算。
+
+## 模板目录
+
+| 框架 | 场景 | 入口 | 静态文件方案 |
+|---|---|---|---|
+| [express-listen](./express-listen) | Express + app.listen | server.js | express.static |
+| [express-export](./express-export) | Express + module.exports | app.js | express.static |
+| [express-multifile](./express-multifile) | Express + 多文件路由 | app.js | express.static |
+| [express-typescript](./express-typescript) | Express + TypeScript | src/index.ts | express.static |
+| [fastify](./fastify) | Fastify + Schema 校验 | server.js | @fastify/static |
+| [fastify-plugins](./fastify-plugins) | Fastify + 多插件注册 | server.js | @fastify/static |
+| [koa](./koa) | Koa + 洋葱中间件 | server.js | koa-static |
+| [hono](./hono) | Hono + 边缘优先 | app.js | @hono/node-server serveStatic |
+| [elysia](./elysia) | Elysia + 类型安全 | app.js | @elysiajs/static |
+| [nestjs](./nestjs) | NestJS + REST 资源 | src/main.ts | @nestjs/serve-static |
+| [nestjs-multimodule](./nestjs-multimodule) | NestJS + 多模块 | src/main.ts | @nestjs/serve-static |
+| [h3](./h3) | h3 + 原生事件 | server.js | 手动 fs |
+| [node](./node) | 纯 Node.js http | server.js | 手动 fs |
+
+## 每个示例包含
+
+- **源码**：框架特色写法（不增加复杂度，展现各框架风格）
+- **演示页**：`public/index.html` — 配置驱动、实时调用 API、亮色简洁风（阿里橙 `#FF6A00`）
+- **README.md**：项目说明 + 快速开始 + 部署指南
+- **template.json**：控制台模板元数据（占位符 `{{DEPLOY_URL}}` / `{{DEMO_URL}}` / `{{TEMPLATE_ID}}`）
+- **meta.json**：测试断言 + nft 配置（`includeDirs: ["public"]` 兜底打包静态文件）
+
+## 视觉规范
+
+- **品牌色**：阿里橙 `#FF6A00`（按钮、高亮、badge）
+- **风格**：亮色简洁，白底 + 浅灰分区
+- **字体**：系统字体栈 + SF Mono 代码字体
+- **演示页模式**：`PAGE_CONFIG` 配置驱动 → `renderHero` / `renderFeatures` / `renderEndpoints` / `renderFooter`
+- **统一 CSS**：各 fixture 的 `public/style.css` 内容相同
+
+---
+
+## 底层测试文档
+
+以下为 framework-checker 生成物验证的原始文档。
 
 每个支持的后端框架一份独立 fixture + 断言，用来**真跑** framework-checker/backend-runtime 的生成物。
 跟顶层 `case.json` 完全解耦 —— 顶层那套验 TestStep 编排 + 云效 + FC 真部署；本目录只验 framework-checker 生成的 `start.mjs` 在本机能正确响应 HTTP。

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elysia 后端示例 · backend-tests</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero"><div class="container">
+    <span class="badge-framework" id="badge-framework"></span>
+    <h1 id="hero-title"></h1>
+    <p class="tagline" id="hero-tagline"></p>
+    <div class="hero-actions" id="hero-actions"></div>
+  </div></header>
+  <section id="features-section"><div class="container">
+    <h2>框架特色写法</h2>
+    <p class="section-desc">链式 API · derive 类型安全注入 · staticPlugin 静态托管。</p>
+    <div class="feature-grid" id="feature-grid"></div>
+  </div></section>
+  <section id="endpoints-section" style="background: var(--color-bg-soft);"><div class="container">
+    <h2>实时接口演示</h2>
+    <p class="section-desc">点击「试一试」直接调用本示例的 API。</p>
+    <div class="endpoint-list" id="endpoint-list"></div>
+  </div></section>
+  <footer class="footer"><div class="container">
+    <h2>平台能力</h2>
+    <div class="tag-list" id="tag-list"></div>
+    <p class="footer-meta" id="footer-meta"></p>
+  </div></footer>
+  <script>
+    const PAGE_CONFIG = {
+      framework: "Elysia", frameworkSlug: "elysia",
+      tagline: "Elysia + 链式 API + derive 类型安全注入，演示 Web Fetch handler 与 staticPlugin 静态托管。",
+      deployUrl: "{{DEPLOY_URL}}", demoUrl: "{{DEMO_URL}}",
+      features: [
+        { icon: "🔗", title: "链式 API", desc: ".get().post().use() 链式调用，声明式路由定义。" },
+        { icon: "💉", title: "derive", desc: "类型安全地注入请求级上下文，下游路由自动推导类型。" },
+        { icon: "🌐", title: "Web Fetch", desc: "app.fetch: (Request) => Response，原生 Web 标准 handler。" },
+        { icon: "📄", title: "staticPlugin", desc: "@elysiajs/static 托管 public/ 演示页。" }
+      ],
+      endpoints: [
+        { method: "GET", path: "/api/health", desc: "健康检查 · 类型安全表单服务状态" },
+        { method: "GET", path: "/api/users/42", desc: "获取用户信息" },
+        { method: "POST", path: "/api/echo", desc: "回显请求体", body: { k: "v" } },
+        { method: "GET", path: "/api/nope", desc: "不存在的路径 · 返回 404" }
+      ],
+      productTags: ["零配置自动识别 Elysia","nft 自动追踪依赖打包","includeDirs 兜底静态文件","端口自动拦截改写","一键部署到函数计算"]
+    };
+    const MC={GET:"get",POST:"post",PUT:"put",DELETE:"delete"};
+    function renderHero(){document.getElementById("badge-framework").textContent=PAGE_CONFIG.framework;document.title=PAGE_CONFIG.framework+" 后端示例";document.getElementById("hero-title").textContent=PAGE_CONFIG.framework+" 后端示例 · 类型安全表单";document.getElementById("hero-tagline").textContent=PAGE_CONFIG.tagline;const a=document.getElementById("hero-actions");const d=document.createElement("a");d.className="btn btn-primary";d.href=PAGE_CONFIG.deployUrl;d.textContent="一键部署";d.target="_blank";a.appendChild(d);const m=document.createElement("a");m.className="btn btn-outline";m.href=PAGE_CONFIG.demoUrl;m.textContent="在线 Demo";m.target="_blank";a.appendChild(m);}
+    function renderFeatures(){const g=document.getElementById("feature-grid");PAGE_CONFIG.features.forEach(f=>{const c=document.createElement("div");c.className="feature-card";c.innerHTML='<div class="feat-icon">'+f.icon+'</div><h3>'+f.title+'</h3><p>'+f.desc+'</p>';g.appendChild(c);});}
+    function renderEndpoints(){const l=document.getElementById("endpoint-list");PAGE_CONFIG.endpoints.forEach(ep=>{const c=document.createElement("div");c.className="endpoint-card";const h=document.createElement("div");h.className="endpoint-head";const t=document.createElement("span");t.className="method-tag "+(MC[ep.method]||"get");t.textContent=ep.method;const p=document.createElement("span");p.className="endpoint-path";p.textContent=ep.path;h.appendChild(t);h.appendChild(p);const d=document.createElement("p");d.className="endpoint-desc";d.textContent=ep.desc;const a=document.createElement("div");a.className="endpoint-actions";const b=document.createElement("button");b.className="btn btn-primary btn-sm";b.textContent="试一试";const r=document.createElement("div");r.className="response-box";r.innerHTML='<span class="resp-placeholder">点击「试一试」查看响应…</span>';b.addEventListener("click",()=>callEndpoint(ep,r,b));a.appendChild(b);c.appendChild(h);c.appendChild(d);if(ep.body){const bh=document.createElement("p");bh.className="endpoint-desc";bh.style.fontFamily="var(--font-mono)";bh.textContent="请求体: "+JSON.stringify(ep.body);c.appendChild(bh);}c.appendChild(a);c.appendChild(r);l.appendChild(c);});}
+    async function callEndpoint(ep,respBox,btn){const o=btn.textContent;btn.textContent="";const s=document.createElement("span");s.className="spinner";btn.appendChild(s);btn.disabled=true;respBox.innerHTML="";try{const opts={method:ep.method,headers:{}};if(ep.body){opts.headers["content-type"]="application/json";opts.body=JSON.stringify(ep.body);}const res=await fetch(ep.path,opts);const text=await res.text();let pretty=text;try{pretty=JSON.stringify(JSON.parse(text),null,2);}catch(e){}const st=document.createElement("span");st.className="resp-status "+(res.ok?"ok":"err");st.textContent=res.status+" "+res.statusText;respBox.appendChild(st);respBox.appendChild(document.createTextNode("\n"+pretty));}catch(err){const st=document.createElement("span");st.className="resp-status err";st.textContent="请求失败";respBox.appendChild(st);respBox.appendChild(document.createTextNode("\n"+err.message));}finally{btn.disabled=false;btn.textContent=o;}}
+    function renderFooter(){const l=document.getElementById("tag-list");PAGE_CONFIG.productTags.forEach(t=>{const s=document.createElement("span");s.className="tag";s.textContent=t;l.appendChild(s);});document.getElementById("footer-meta").textContent="本示例由平台零配置打包部署 · 框架自动识别 · nft 依赖追踪";}
+    renderHero();renderFeatures();renderEndpoints();renderFooter();
+  </script>
+</body>
+</html>

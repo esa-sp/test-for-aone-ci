@@ -1,0 +1,13 @@
+{
+  "templateName": "Express + TypeScript 配置中心",
+  "templateId": "{{TEMPLATE_ID}}",
+  "framework": "express",
+  "description": "Express + TypeScript 强类型，演示接口定义、类型安全路由与配置中心 API。",
+  "icon": "🔷",
+  "category": "starter",
+  "entry": "dist/index.js",
+  "rootDirectory": "/backend-tests/express-typescript",
+  "deployUrl": "{{DEPLOY_URL}}",
+  "demoUrl": "{{DEMO_URL}}",
+  "tags": ["express", "typescript", "类型安全", "配置中心"]
+}

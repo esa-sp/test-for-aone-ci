@@ -13,7 +13,7 @@ export const userRouter = Router();
 userRouter.get('/:id', (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
   const user = users.get(id) || { id, name: `user-${id}` };
-  res.json(user);
+  res.json({ ...user, source: 'express-typescript' });
 });
 
 userRouter.post('/', (req: Request, res: Response) => {

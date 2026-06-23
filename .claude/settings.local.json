@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git diff *)",
+      "Bash(md5 -r backend-tests/*/public/index.html)",
+      "Bash(awk '{print $1}')"
+    ]
+  }
+}

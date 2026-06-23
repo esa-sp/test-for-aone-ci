@@ -1,0 +1,13 @@
+{
+  "templateName": "Koa · 访问日志",
+  "templateId": "{{TEMPLATE_ID}}",
+  "framework": "koa",
+  "description": "Koa + 洋葱模型中间件，演示 ctx 级联、访问日志与 koa-static 静态托管。",
+  "icon": "🧅",
+  "category": "starter",
+  "entry": "server.js",
+  "rootDirectory": "/backend-tests/koa",
+  "deployUrl": "{{DEPLOY_URL}}",
+  "demoUrl": "{{DEMO_URL}}",
+  "tags": ["koa", "洋葱模型", "中间件", "访问日志"]
+}

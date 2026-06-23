@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const { authMiddleware } = require('./middleware/auth');
 const { errorHandler } = require('./middleware/errorHandler');
 const userRoutes = require('./routes/users');
@@ -8,6 +9,7 @@ const healthRoutes = require('./routes/health');
 const app = express();
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // 路由注册
 app.use('/api/health', healthRoutes);
