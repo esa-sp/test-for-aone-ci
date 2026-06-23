@@ -10,8 +10,8 @@
 - ✅ **ValidationPipe 全局管道**：NestJS 杀手锏，自动校验 DTO + 类型转换 + 过滤未声明属性
 - ✅ **DTO 装饰器校验**：`@IsString` / `@IsInt` / `@MinLength` 声明字段约束，非法请求返回 400
 - ✅ **模块化架构**：Controller / Module / DTO 分层，依赖注入，企业级可维护性
-- ✅ **ServeStatic 静态托管**：`@nestjs/serve-static` 托管演示页，平台用 `includeDirs` 兜底打包
-- ✅ **平台零配置**：推送即部署，框架自动识别、依赖自动追踪
+- ✅ **ServeStatic 静态托管**：`@nestjs/serve-static` 托管演示页
+- ✅ **平台零配置**：推送即部署，框架自动检测
 - ✅ **独立可跑**：`npm install && node dist/main.js` 本地直接启动
 
 ## Tech Stack
@@ -64,7 +64,7 @@ nestjs/
 │   └── style.css            # 统一样式（亮色简洁 · 阿里橙）
 ├── package.json
 ├── tsconfig.json
-├── meta.json                # 测试断言 + nft 配置（includeDirs: ["public"]）
+├── meta.json                # 测试断言 + includeDirs 配置
 ├── template.json            # 控制台模板元数据
 └── README.md
 ```
@@ -82,7 +82,7 @@ nestjs/
 
 ## 平台能力标签
 
-`零配置自动识别 NestJS` `nft 自动追踪依赖打包` `includeDirs 兜底静态文件` `端口自动拦截改写` `一键部署到函数计算`
+`零配置自动识别 NestJS` `框架自动检测` `一键部署到函数计算`
 
 ## License
 

@@ -3,8 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "tsc -p .",
-    "postinstall": "tsc -p ."
+    "build": "nest build",
+    "postinstall": "nest build",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:prod": "node dist/main"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -17,6 +20,7 @@
     "rxjs": "^7.8.0"
   },
   "devDependencies": {
+    "@nestjs/cli": "^10.0.0",
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0"
   }

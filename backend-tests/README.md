@@ -1,7 +1,7 @@
 # backend-tests · 后端框架示例项目集
 
 > 13 个后端框架示例项目，每个都是独立可跑、可一键部署的完整 demo。
-> 对标 Vercel / Cloudflare / EdgeOne 模板生态，展现平台零配置自动识别、nft 自动打包、一键部署到函数计算。
+> 对标 Vercel / Cloudflare / EdgeOne 模板生态，展现平台零配置自动识别、框架自动检测、一键部署到函数计算。
 
 ## 模板目录
 
@@ -15,7 +15,7 @@
 | [fastify-plugins](./fastify-plugins) | Fastify + 多插件注册 | server.js | @fastify/static |
 | [koa](./koa) | Koa + 洋葱中间件 | server.js | koa-static |
 | [hono](./hono) | Hono + 边缘优先 | app.js | @hono/node-server serveStatic |
-| [elysia](./elysia) | Elysia + 类型安全 | app.js | @elysiajs/static |
+| [elysia](./elysia) | Elysia + 类型安全 | app.js | 手动 fs |
 | [nestjs](./nestjs) | NestJS + REST 资源 | src/main.ts | @nestjs/serve-static |
 | [nestjs-multimodule](./nestjs-multimodule) | NestJS + 多模块 | src/main.ts | @nestjs/serve-static |
 | [h3](./h3) | h3 + 原生事件 | server.js | 手动 fs |
@@ -27,7 +27,7 @@
 - **演示页**：`public/index.html` — 配置驱动、实时调用 API、亮色简洁风（阿里橙 `#FF6A00`）
 - **README.md**：项目说明 + 快速开始 + 部署指南
 - **template.json**：控制台模板元数据（占位符 `{{DEPLOY_URL}}` / `{{DEMO_URL}}` / `{{TEMPLATE_ID}}`）
-- **meta.json**：测试断言 + nft 配置（`includeDirs: ["public"]` 兜底打包静态文件）
+- **meta.json**：测试断言 + includeDirs 配置（`includeDirs: ["public"]`）
 
 ## 视觉规范
 

@@ -25,7 +25,7 @@ app.post('/api/echo', async (c) => {
 if (require.main === module) {
   const { serve } = require('@hono/node-server');
   const port = process.env.PORT || 3000;
-  serve(app, { port }, (info) => console.log(`listening on port ${info.port}`));
+  serve({ fetch: app.fetch, port }, (info) => console.log(`listening on port ${info.port}`));
 }
 
 module.exports = app;

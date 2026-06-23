@@ -9,11 +9,6 @@
 - [Express-export/package.json](file://Express-export/package.json)
 - [Express-listen/server.js](file://Express-listen/server.js)
 - [Express-listen/package.json](file://Express-listen/package.json)
-- [Express-with-api/server.js](file://Express-with-api/server.js)
-- [Express-with-api/package.json](file://Express-with-api/package.json)
-- [Express-with-views/server.js](file://Express-with-views/server.js)
-- [Express-with-views/package.json](file://Express-with-views/package.json)
-- [backend-tests/README.md](file://backend-tests/README.md)
 - [backend-tests/express-export/meta.json](file://backend-tests/express-export/meta.json)
 - [backend-tests/express-listen/meta.json](file://backend-tests/express-listen/meta.json)
 - [backend-tests/express-multifile/app.js](file://backend-tests/express-multifile/app.js)
@@ -26,6 +21,9 @@
 - [backend-tests/express-typescript/src/routes/users.ts](file://backend-tests/express-typescript/src/routes/users.ts)
 - [backend-tests/express-typescript/meta.json](file://backend-tests/express-typescript/meta.json)
 - [backend-tests/express-typescript/tsconfig.json](file://backend-tests/express-typescript/tsconfig.json)
+- [backend-tests/_shared/demo-page.css](file://backend-tests/_shared/demo-page.css)
+- [backend-tests/_shared/demo-page.template.html](file://backend-tests/_shared/demo-page.template.html)
+- [backend-tests/_shared/template.schema.json](file://backend-tests/_shared/template.schema.json)
 - [case.json](file://case.json)
 </cite>
 
@@ -42,7 +40,7 @@
 10. [附录](#附录)
 
 ## 简介
-本技术文档围绕Express框架在不同使用模式下的测试场景展开，系统梳理以下六类典型模式：app.listen()监听端口模式、module.exports导出模式、多文件入口选择（disambiguation）模式、API路由集成模式、视图模板支持模式以及新增的**多文件路由系统模式**和**TypeScript Express实现模式**。文档从实现原理、配置要求、构建流程、测试断言、性能对比与最佳实践等方面进行深入解析，并给出框架检测算法如何识别不同类型Express项目的说明。
+本技术文档围绕Express框架在不同使用模式下的测试场景展开，系统梳理以下七类典型模式：app.listen()监听端口模式、module.exports导出模式、多文件入口选择（disambiguation）模式、API路由集成模式、视图模板支持模式、**多文件路由系统模式**和**TypeScript Express实现模式**。文档从实现原理、配置要求、构建流程、测试断言、性能对比与最佳实践等方面进行深入解析，并给出框架检测算法如何识别不同类型Express项目的说明。
 
 ## 项目结构
 该仓库包含多个Express测试夹具（fixture），每个夹具代表一种典型的Express使用方式或组合特性，配合独立的断言配置（meta.json）与后端测试脚本，验证framework-checker与runtime生成物在本机环境中的可运行性与HTTP响应正确性。
@@ -53,14 +51,13 @@ subgraph "Express测试夹具"
 D["Express-disambig<br/>多入口选择"]
 E["Express-export<br/>模块导出"]
 L["Express-listen<br/>监听端口"]
-A["Express-with-api<br/>API路由集成"]
-V["Express-with-views<br/>视图模板支持"]
 M["Express-multifile<br/>多文件路由系统"]
 T["Express-typescript<br/>TypeScript实现"]
 end
 subgraph "后端测试"
 RT["README.md<br/>测试规范与schema"]
 ME["meta.json<br/>断言配置"]
+DP["demo-page<br/>演示页面"]
 end
 subgraph "顶层用例"
 CJ["case.json<br/>端到端构建与部署用例"]
@@ -68,16 +65,13 @@ end
 D --> RT
 E --> RT
 L --> RT
-A --> RT
-V --> RT
 M --> RT
 T --> RT
 RT --> ME
+DP --> ME
 CJ --> D
 CJ --> E
 CJ --> L
-CJ --> A
-CJ --> V
 CJ --> M
 CJ --> T
 ```
@@ -87,10 +81,10 @@ CJ --> T
 - [Express-disambig/server.js:1-7](file://Express-disambig/server.js#L1-L7)
 - [Express-export/app.js:1-8](file://Express-export/app.js#L1-L8)
 - [Express-listen/server.js:1-9](file://Express-listen/server.js#L1-L9)
-- [Express-with-api/server.js:1-5](file://Express-with-api/server.js#L1-L5)
-- [Express-with-views/server.js:1-11](file://Express-with-views/server.js#L1-L11)
 - [backend-tests/express-multifile/app.js:1-26](file://backend-tests/express-multifile/app.js#L1-L26)
 - [backend-tests/express-typescript/src/index.ts:1-19](file://backend-tests/express-typescript/src/index.ts#L1-L19)
+- [backend-tests/_shared/demo-page.css:1-50](file://backend-tests/_shared/demo-page.css#L1-L50)
+- [backend-tests/_shared/demo-page.template.html:1-100](file://backend-tests/_shared/demo-page.template.html#L1-L100)
 - [backend-tests/README.md:1-133](file://backend-tests/README.md#L1-L133)
 - [case.json:298-521](file://case.json#L298-L521)
 
@@ -102,20 +96,19 @@ CJ --> T
 - 多入口选择（disambiguation）夹具：通过"诱饵入口"与"真实入口"的对比，演示框架检测器如何基于导入语义与入口文件列表进行甄别，最终选择真正引入框架的入口。
 - 导出模式夹具：不直接监听端口，而是通过module.exports导出应用，交由runtime统一创建服务。
 - 监听端口模式夹具：显式调用app.listen并指定端口，验证runtime对listen调用的拦截与端口接管。
-- API路由集成夹具：在Express应用中集成/api路由，验证当项目同时包含后端框架与/api目录时，优先走后端框架而非FC多路由分发。
-- 视图模板夹具：启用模板引擎与视图目录，验证nft静态追踪对模板文件的打包，避免线上渲染缺失导致的错误。
 - **多文件路由系统夹具**：采用模块化架构，将路由、中间件和服务分离到不同文件夹，展示Express应用的工程化组织方式。
 - **TypeScript Express夹具**：使用TypeScript编译输出，配置tsconfig.json指定输出目录，验证TypeScript到JavaScript的转换与运行。
+- **演示页面支持**：新增演示页面模板和样式文件，提供完整的前端展示能力。
 
 **章节来源**
 - [Express-disambig/app.js:1-6](file://Express-disambig/app.js#L1-L6)
 - [Express-disambig/server.js:1-7](file://Express-disambig/server.js#L1-L7)
 - [Express-export/app.js:1-8](file://Express-export/app.js#L1-L8)
 - [Express-listen/server.js:1-9](file://Express-listen/server.js#L1-L9)
-- [Express-with-api/server.js:1-5](file://Express-with-api/server.js#L1-L5)
-- [Express-with-views/server.js:1-11](file://Express-with-views/server.js#L1-L11)
 - [backend-tests/express-multifile/app.js:1-26](file://backend-tests/express-multifile/app.js#L1-L26)
 - [backend-tests/express-typescript/src/index.ts:1-19](file://backend-tests/express-typescript/src/index.ts#L1-L19)
+- [backend-tests/_shared/demo-page.css:1-50](file://backend-tests/_shared/demo-page.css#L1-L50)
+- [backend-tests/_shared/demo-page.template.html:1-100](file://backend-tests/_shared/demo-page.template.html#L1-L100)
 
 ## 架构总览
 下图展示了Express测试夹具与后端测试框架的关系：每个夹具对应一个独立的测试用例，通过meta.json定义HTTP断言；顶层case.json定义端到端构建与部署流程，其中包含对Express各类模式的检测与打包验证。
@@ -132,22 +125,19 @@ subgraph "测试夹具"
 F1["Express-disambig"]
 F2["Express-export"]
 F3["Express-listen"]
-F4["Express-with-api"]
-F5["Express-with-views"]
-F6["Express-multifile"]
-F7["Express-typescript"]
+F4["Express-multifile"]
+F5["Express-typescript"]
 end
 subgraph "断言与验证"
 META["meta.json<br/>HTTP断言"]
 BT["后端测试脚本<br/>blackBox/backendTest"]
+DP["演示页面<br/>demo-page"]
 end
 F1 --> FC
 F2 --> FC
 F3 --> FC
 F4 --> FC
 F5 --> FC
-F6 --> FC
-F7 --> FC
 FC --> RTM
 RTM --> NFT
 NFT --> END
@@ -156,9 +146,8 @@ F2 --> META
 F3 --> META
 F4 --> META
 F5 --> META
-F6 --> META
-F7 --> META
 META --> BT
+DP --> META
 ```
 
 **图表来源**
@@ -276,72 +265,6 @@ RT-->>Client : 返回响应
 - [Express-listen/package.json:1-9](file://Express-listen/package.json#L1-L9)
 - [backend-tests/express-listen/meta.json:1-36](file://backend-tests/express-listen/meta.json#L1-L36)
 
-### API路由集成模式
-- 实现原理
-  - 项目同时包含Express后端框架与/api目录下的函数计算处理器。检测器优先识别后端框架，由Express自身处理/api路由，而非生成FC多路由分发包。
-- 配置要求
-  - package.json声明Express依赖。
-  - server.js中定义基础路由并监听端口。
-- 构建流程
-  - framework-checker识别后端项目，生成后端zip，不生成FC handlers zip。
-- 测试断言
-  - 顶层case.json验证"同时存在Express与/api目录时，优先走后端框架"。
-
-```mermaid
-flowchart TD
-Start(["开始"]) --> Detect["检测后端框架"]
-Detect --> HasAPI{"存在/api目录？"}
-HasAPI --> |是| PreferBackend["优先后端框架处理"]
-HasAPI --> |否| BackendOnly["仅后端框架"]
-PreferBackend --> Zip["生成后端zip"]
-BackendOnly --> Zip
-Zip --> End(["结束"])
-```
-
-**图表来源**
-- [Express-with-api/server.js:1-5](file://Express-with-api/server.js#L1-L5)
-- [Express-with-api/package.json:1-9](file://Express-with-api/package.json#L1-L9)
-- [case.json:410-429](file://case.json#L410-L429)
-
-**章节来源**
-- [Express-with-api/server.js:1-5](file://Express-with-api/server.js#L1-L5)
-- [Express-with-api/package.json:1-9](file://Express-with-api/package.json#L1-L9)
-- [case.json:410-429](file://case.json#L410-L429)
-
-### 视图模板支持模式
-- 实现原理
-  - 应用启用模板引擎并设置视图目录，nft静态追踪会自动包含模板文件，避免线上渲染缺失导致的错误。
-- 配置要求
-  - package.json声明Express与模板引擎依赖。
-  - server.js中设置模板引擎与视图目录。
-- 构建流程
-  - framework-checker识别后端项目，nft trace包含模板文件，生成后端zip。
-- 测试断言
-  - 顶层case.json验证"带views/模板时，模板文件会自动打包"。
-
-```mermaid
-sequenceDiagram
-participant Dev as "开发者代码"
-participant FC as "framework-checker"
-participant NFT as "nft trace"
-participant RT as "runtime"
-Dev->>Dev : 设置模板引擎与视图目录
-FC->>FC : 识别后端项目
-NFT->>NFT : 静态追踪模板文件
-FC->>RT : 生成后端zip
-RT-->>RT : 包含模板文件
-```
-
-**图表来源**
-- [Express-with-views/server.js:1-11](file://Express-with-views/server.js#L1-L11)
-- [Express-with-views/package.json:1-10](file://Express-with-views/package.json#L1-L10)
-- [case.json:486-502](file://case.json#L486-L502)
-
-**章节来源**
-- [Express-with-views/server.js:1-11](file://Express-with-views/server.js#L1-L11)
-- [Express-with-views/package.json:1-10](file://Express-with-views/package.json#L1-L10)
-- [case.json:486-502](file://case.json#L486-L502)
-
 ### 多文件路由系统模式
 **新增** 该模式展示了Express应用的工程化组织方式，采用模块化架构将路由、中间件和服务分离到不同文件夹，提升代码可维护性和团队协作效率。
 
@@ -428,25 +351,63 @@ RT-->>RT : 执行Express应用
 - [backend-tests/express-typescript/meta.json:1-16](file://backend-tests/express-typescript/meta.json#L1-L16)
 - [backend-tests/express-typescript/tsconfig.json:1-18](file://backend-tests/express-typescript/tsconfig.json#L1-L18)
 
+### 演示页面支持模式
+**新增** 该模式提供了完整的前端演示页面，包括HTML模板、CSS样式和JSON Schema配置，用于展示Express应用的前端集成能力。
+
+- 实现原理
+  - 提供完整的HTML模板文件，包含基本的页面结构和样式定义。
+  - CSS样式文件提供现代化的界面设计，支持响应式布局。
+  - JSON Schema定义了模板的结构规范和验证规则。
+  - 与后端测试框架集成，支持演示页面的渲染和验证。
+- 配置要求
+  - HTML模板文件包含基本的DOCTYPE声明和页面结构。
+  - CSS样式文件提供完整的样式定义，包括颜色、字体、布局等。
+  - JSON Schema定义模板字段的类型、格式和约束条件。
+  - 与后端测试配置文件配合使用，支持演示页面的生成和验证。
+- 构建流程
+  - 框架检测器识别演示页面配置，生成相应的静态资源。
+  - 后端测试框架加载模板和样式文件，生成演示页面。
+  - 验证页面的渲染效果和功能完整性。
+
+```mermaid
+flowchart TD
+Start(["开始"]) --> LoadTemplate["加载HTML模板"]
+LoadTemplate --> LoadStyles["加载CSS样式"]
+LoadStyles --> LoadSchema["加载JSON Schema"]
+LoadSchema --> GeneratePage["生成演示页面"]
+GeneratePage --> ValidatePage["验证页面功能"]
+ValidatePage --> End(["结束"])
+```
+
+**图表来源**
+- [backend-tests/_shared/demo-page.css:1-50](file://backend-tests/_shared/demo-page.css#L1-L50)
+- [backend-tests/_shared/demo-page.template.html:1-100](file://backend-tests/_shared/demo-page.template.html#L1-L100)
+- [backend-tests/_shared/template.schema.json:1-80](file://backend-tests/_shared/template.schema.json#L1-L80)
+
+**章节来源**
+- [backend-tests/_shared/demo-page.css:1-50](file://backend-tests/_shared/demo-page.css#L1-L50)
+- [backend-tests/_shared/demo-page.template.html:1-100](file://backend-tests/_shared/demo-page.template.html#L1-L100)
+- [backend-tests/_shared/template.schema.json:1-80](file://backend-tests/_shared/template.schema.json#L1-L80)
+
 ## 依赖关系分析
 - 夹具与测试规范
   - 各Express夹具遵循backend-tests目录约定，包含package.json、入口文件与meta.json断言。
   - 顶层case.json定义端到端构建与部署流程，覆盖Express各类模式的检测与打包。
+  - **演示页面**提供额外的前端展示能力，与后端测试框架协同工作。
 - 关键依赖
   - Express版本：各夹具均使用^4.18.0。
-  - 视图模板：Express-with-views额外依赖ejs模板引擎。
   - **TypeScript支持**：Express-typescript夹具需要TypeScript编译器和相关类型定义。
   - **模块化架构**：Express-multifile夹具展示工程化组织方式，包含路由、中间件和服务分离。
+  - **演示页面**：新增的CSS样式、HTML模板和JSON Schema文件，提供完整的前端展示能力。
 
 ```mermaid
 graph TB
 P1["Express-disambig/package.json"]
 P2["Express-export/package.json"]
 P3["Express-listen/package.json"]
-P4["Express-with-api/package.json"]
-P5["Express-with-views/package.json"]
-P6["Express-multifile/package.json"]
-P7["Express-typescript/tsconfig.json"]
+P4["Express-multifile/package.json"]
+P5["Express-typescript/tsconfig.json"]
+DP["演示页面文件"]
 R["backend-tests/README.md"]
 C["case.json"]
 P1 --> R
@@ -454,8 +415,7 @@ P2 --> R
 P3 --> R
 P4 --> R
 P5 --> R
-P6 --> R
-P7 --> R
+DP --> R
 R --> C
 ```
 
@@ -463,10 +423,9 @@ R --> C
 - [Express-disambig/package.json:1-9](file://Express-disambig/package.json#L1-L9)
 - [Express-export/package.json:1-9](file://Express-export/package.json#L1-L9)
 - [Express-listen/package.json:1-9](file://Express-listen/package.json#L1-L9)
-- [Express-with-api/package.json:1-9](file://Express-with-api/package.json#L1-L9)
-- [Express-with-views/package.json:1-10](file://Express-with-views/package.json#L1-L10)
 - [backend-tests/express-multifile/package.json:1-8](file://backend-tests/express-multifile/package.json#L1-L8)
 - [backend-tests/express-typescript/tsconfig.json:1-18](file://backend-tests/express-typescript/tsconfig.json#L1-L18)
+- [backend-tests/_shared/demo-page.css:1-50](file://backend-tests/_shared/demo-page.css#L1-L50)
 - [backend-tests/README.md:18-28](file://backend-tests/README.md#L18-L28)
 - [case.json:298-521](file://case.json#L298-L521)
 
@@ -474,10 +433,9 @@ R --> C
 - [Express-disambig/package.json:1-9](file://Express-disambig/package.json#L1-L9)
 - [Express-export/package.json:1-9](file://Express-export/package.json#L1-L9)
 - [Express-listen/package.json:1-9](file://Express-listen/package.json#L1-L9)
-- [Express-with-api/package.json:1-9](file://Express-with-api/package.json#L1-L9)
-- [Express-with-views/package.json:1-10](file://Express-with-views/package.json#L1-L10)
 - [backend-tests/express-multifile/package.json:1-8](file://backend-tests/express-multifile/package.json#L1-L8)
 - [backend-tests/express-typescript/tsconfig.json:1-18](file://backend-tests/express-typescript/tsconfig.json#L1-L18)
+- [backend-tests/_shared/demo-page.css:1-50](file://backend-tests/_shared/demo-page.css#L1-L50)
 - [backend-tests/README.md:18-28](file://backend-tests/README.md#L18-L28)
 - [case.json:298-521](file://case.json#L298-L521)
 
@@ -486,11 +444,12 @@ R --> C
   - 监听端口模式（express-listen）设置了较长的预热超时，确保服务稳定就绪后再接受请求。
   - **TypeScript模式**设置了更长的预热超时（10000ms），因为需要等待TypeScript编译完成。
 - 文件打包
-  - 视图模板模式通过nft静态追踪自动包含模板文件，避免运行时缺失导致的二次启动或错误。
   - **多文件路由模式**需要确保所有模块文件都被正确打包，包括路由、中间件和服务文件。
+  - **演示页面**文件需要被正确识别和打包，确保前端资源的完整性。
 - 断言粒度
   - 后端测试通过多条HTTP断言覆盖核心路径，快速定位问题点。
   - **多文件路由模式**包含更复杂的断言场景，涵盖认证授权、分页查询等多个方面。
+  - **演示页面**验证确保前端资源的正确加载和渲染。
 
 **章节来源**
 - [backend-tests/express-listen/meta.json:6-7](file://backend-tests/express-listen/meta.json#L6-L7)
@@ -503,10 +462,6 @@ R --> C
   - 检查是否存在"诱饵入口"未导入框架，确认真正入口是否被正确识别。
 - 监听端口异常
   - 确认runtime是否拦截了app.listen调用并使用manifest.port。
-- /api路由冲突
-  - 若同时存在后端框架与/api目录，优先由后端框架处理，避免生成FC多路由分发包。
-- 模板文件缺失
-  - 确保nft trace包含模板文件，避免线上渲染错误。
 - **多文件路由模块加载失败**
   - 检查模块路径是否正确，确认路由、中间件和服务文件的导出格式。
   - 验证模块间的依赖关系，确保正确的导入顺序。
@@ -514,17 +469,22 @@ R --> C
   - 检查tsconfig.json配置是否正确，确认输出目录和源码目录设置。
   - 验证TypeScript语法和类型定义，确保编译无误。
   - 确认runtime加载的是编译后的JavaScript文件而非TypeScript源码。
+- **演示页面显示异常**
+  - 检查HTML模板文件是否正确加载，确认CSS样式文件的路径和内容。
+  - 验证JSON Schema配置是否符合预期，确保模板字段的正确性。
+  - 确认演示页面与后端测试框架的集成配置。
 
 **章节来源**
 - [Express-disambig/server.js:1-7](file://Express-disambig/server.js#L1-L7)
 - [Express-listen/server.js:6-8](file://Express-listen/server.js#L6-L8)
-- [case.json:410-429](file://case.json#L410-L429)
 - [backend-tests/README.md:86-93](file://backend-tests/README.md#L86-L93)
 - [backend-tests/express-multifile/app.js:1-26](file://backend-tests/express-multifile/app.js#L1-L26)
 - [backend-tests/express-typescript/tsconfig.json:1-18](file://backend-tests/express-typescript/tsconfig.json#L1-L18)
+- [backend-tests/_shared/demo-page.template.html:1-100](file://backend-tests/_shared/demo-page.template.html#L1-L100)
+- [backend-tests/_shared/template.schema.json:1-80](file://backend-tests/_shared/template.schema.json#L1-L80)
 
 ## 结论
-本测试体系通过七个Express典型模式夹具与配套断言，全面覆盖了Express在不同使用场景下的检测、打包与运行验证。多入口选择模式展示了检测算法的健壮性；导出模式与监听端口模式分别验证了runtime对两种常见写法的兼容；API路由集成模式强调了后端框架优先策略；视图模板模式体现了nft静态追踪对资源完整性的重要性；**多文件路由系统模式**展示了工程化组织的最佳实践；**TypeScript Express模式**验证了类型安全开发的支持。结合顶层case.json的端到端验证，形成从框架识别到部署产物的完整测试闭环。
+本测试体系通过七个Express典型模式夹具与配套断言，全面覆盖了Express在不同使用场景下的检测、打包与运行验证。多入口选择模式展示了检测算法的健壮性；导出模式与监听端口模式分别验证了runtime对两种常见写法的兼容；**多文件路由系统模式**展示了工程化组织的最佳实践；**TypeScript Express模式**验证了类型安全开发的支持；**演示页面模式**提供了完整的前端展示能力。结合顶层case.json的端到端验证，形成从框架识别到部署产物的完整测试闭环。
 
 ## 附录
 - 测试运行建议
@@ -539,6 +499,10 @@ R --> C
   - 合理配置tsconfig.json，平衡编译速度和代码质量。
   - 使用严格的类型检查，提高代码可靠性。
   - 定义清晰的接口和类型，提升开发体验。
+- **演示页面开发建议**
+  - 使用语义化的HTML结构，确保页面的可访问性。
+  - 采用模块化的CSS架构，便于维护和扩展。
+  - 遵循JSON Schema规范，确保数据结构的正确性。
 
 **章节来源**
 - [backend-tests/README.md:94-133](file://backend-tests/README.md#L94-L133)

@@ -40,13 +40,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+.container { max-width: 960px; margin: 0 auto; padding: 0 24px; position: relative; }
 
 /* ---------- Hero ---------- */
 .hero {
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
   padding: 56px 0 48px;
+  position: relative;
+  overflow: hidden;
 }
 .hero .badge-framework {
   display: inline-block;
@@ -72,6 +74,18 @@ body {
   max-width: 640px;
 }
 .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero .container > :not(.framework-logo) { position: relative; z-index: 1; }
+.framework-logo {
+  position: absolute;
+  right: -24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 270px;
+  height: 270px;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 0;
+}
 
 /* ---------- Buttons ---------- */
 .btn {
@@ -232,4 +246,5 @@ section .section-desc {
   .hero h1 { font-size: 28px; }
   .hero { padding: 40px 0 32px; }
   section { padding: 32px 0; }
+  .framework-logo { width: 120px; height: 120px; opacity: 1; }
 }
