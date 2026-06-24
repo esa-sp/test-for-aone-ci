@@ -26,3 +26,5 @@
 3. repoName：测试用例中使用的仓库名，一般为本仓库test-for-aone-ci。*如果创建新仓库填空字符串。也可填其他仓库。*
 4. requireStatus：需求什么构建结果算测试成功，支持SUCCESS、FAIL、CANCEL
 5. requireLogTextList：测试用例中存在哪些字符串算构建成功，支持正则表达式
+
+### 
