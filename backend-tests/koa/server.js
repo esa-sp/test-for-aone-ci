@@ -20,7 +20,7 @@ app.use(async (ctx, next) => {
 app.use(serve(path.join(__dirname, 'public')));
 
 router.get('/api/health', (ctx) => {
-  ctx.body = { ok: true, framework: 'koa', service: '访问日志', message: '服务运行中' };
+  ctx.body = { ok: true, framework: 'koa', service: '访问日志', message: '服务运行中...' };
 });
 
 router.get('/api/users/:id', (ctx) => {
