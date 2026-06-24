@@ -27,4 +27,4 @@
 4. requireStatus：需求什么构建结果算测试成功，支持SUCCESS、FAIL、CANCEL
 5. requireLogTextList：测试用例中存在哪些字符串算构建成功，支持正则表达式
 
-### asd
+### xzc
