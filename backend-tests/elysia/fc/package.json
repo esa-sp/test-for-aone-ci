@@ -1,0 +1,13 @@
+{
+  "name": "elysia-backend-test",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node start.mjs"
+  },
+  "dependencies": {
+    "elysia": "^1.1.0",
+    "@elysiajs/node": "^1.1.0"
+  },
+  "main": "./start.mjs"
+}
