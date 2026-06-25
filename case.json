@@ -403,7 +403,7 @@
     "requireStatus": "FAIL",
     "requireLogTextList": [
       "No backend framework but /api/ has FC handler files",
-      "Pack backend zip failed: Route conflict"
+      "Route conflict"
     ]
   },
   {
