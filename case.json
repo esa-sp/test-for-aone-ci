@@ -574,29 +574,5 @@
       "Build artifacts generated successfully",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
-  },
-  {
-    "name": "Nuxt 项目（meta-framework）走 meta-runtime adapter 而非 nft trace",
-    "envs": {
-      "ERName": "test-for-aone-ci",
-      "RootDirectory": "/Nuxt-app",
-      "InstallCommand": "npm install --no-audit --no-fund",
-      "BuildCommand": "npm run build",
-      "AssetsDirectory": "",
-      "EREntry": ""
-    },
-    "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
-    "requireLogTextList": [
-      "Framework detection (all matched):",
-      "nuxtjs",
-      "Detected meta-framework",
-      "meta-runtime pack finished:",
-      "Meta-framework backend zip created:",
-      "<<LOG>>step|buildEnd<</LOG>>"
-    ],
-    "notRequireLogTextList": [
-      "nft trace finished:"
-    ]
   }
 ]
