@@ -1,8 +1,0 @@
-{
-  "name": "koa-app-fixture",
-  "version": "0.0.0",
-  "private": true,
-  "dependencies": {
-    "koa": "^2.14.0"
-  }
-}

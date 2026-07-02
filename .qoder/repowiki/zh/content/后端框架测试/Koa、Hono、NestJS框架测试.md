@@ -44,10 +44,11 @@
 ## 更新摘要
 **所做更改**
 - 更新Hono框架静态文件服务章节，反映从@hono/node-server/serve-static中间件重构为自定义实现的重大架构变更
+- 新增Koa测试依赖管理的改进说明，包括overrides部分的generator-function版本覆盖机制
 - 新增Hono自定义静态文件服务的安全检查机制、MIME类型映射和错误处理实现细节
 - 更新静态文件服务架构图，展示新的自定义实现流程
 - 增强Hono组件分析，包含新的静态文件服务实现对比
-- 更新依赖关系分析，反映Hono框架对@hono/node-server的依赖变化
+- 更新依赖关系分析，反映Hono框架对@hono/node-server的依赖变化和Koa的依赖覆盖机制
 
 ## 目录
 1. [简介](#简介)
@@ -70,10 +71,11 @@
 - 框架检测机制的实现细节（通过代码特征识别框架类型）
 - 各框架优缺点、适用场景与迁移建议
 - **更新**：Hono框架静态文件服务的重大架构变更，从外部@hono/node-server/serve-static中间件重构为自定义实现
+- **新增**：Koa测试依赖管理的改进，通过overrides部分确保依赖解析的一致性和避免与其他依赖产生冲突
 
 ## 项目结构
 本仓库包含四类测试夹具与配套断言，现已增强为包含完整的演示页面和静态文件服务：
-- Koa应用夹具：包含最小可运行示例、断言元数据和演示页面
+- Koa应用夹具：包含最小可运行示例、断言元数据和演示页面，**新增**：依赖覆盖机制确保generator-function版本一致性
 - Hono应用夹具：包含最小可运行示例、断言元数据和演示页面，**更新**：采用自定义静态文件服务实现
 - NestJS应用夹具：包含TypeScript源码与编译产物，断言元数据指向dist产物，以及演示页面
 - **新增**：Elysia应用夹具：包含类型安全的静态文件服务实现，展示手动fs.readFileSync替代@elysiajs/static插件
@@ -128,9 +130,9 @@ E1 --> E2 --> E3 --> E4 --> E5
 ```
 
 **图表来源**
-- [backend-tests/koa/package.json:1-11](file://backend-tests/koa/package.json#L1-L11)
-- [backend-tests/koa/server.js:1-26](file://backend-tests/koa/server.js#L1-L26)
-- [backend-tests/koa/meta.json:1-14](file://backend-tests/koa/meta.json#L1-L14)
+- [backend-tests/koa/package.json:1-20](file://backend-tests/koa/package.json#L1-L20)
+- [backend-tests/koa/server.js:1-40](file://backend-tests/koa/server.js#L1-L40)
+- [backend-tests/koa/meta.json:1-16](file://backend-tests/koa/meta.json#L1-L16)
 - [backend-tests/koa/public/index.html:1-50](file://backend-tests/koa/public/index.html#L1-L50)
 - [backend-tests/koa/public/style.css:1-30](file://backend-tests/koa/public/style.css#L1-L30)
 - [backend-tests/koa/template.json:1-20](file://backend-tests/koa/template.json#L1-L20)
@@ -142,7 +144,7 @@ E1 --> E2 --> E3 --> E4 --> E5
 - [backend-tests/hono/template.json:1-14](file://backend-tests/hono/template.json#L1-L14)
 - [backend-tests/hono/fc/app.js:1-60](file://backend-tests/hono/fc/app.js#L1-L60)
 - [backend-tests/hono/fc/start.mjs:1-470](file://backend-tests/hono/fc/start.mjs#L1-L470)
-- [backend-tests/nestjs/package.json:1-21](file://backend-tests/nestjs/package.json#L1-L21)
+- [backend-tests/nestjs/package.json:1-28](file://backend-tests/nestjs/package.json#L1-L28)
 - [backend-tests/nestjs/src/app.module.ts:1-8](file://backend-tests/nestjs/src/app.module.ts#L1-L8)
 - [backend-tests/nestjs/src/app.controller.ts:1-20](file://backend-tests/nestjs/src/app.controller.ts#L1-L20)
 - [backend-tests/nestjs/dist/main.js:1-11](file://backend-tests/nestjs/dist/main.js#L1-L11)
@@ -150,7 +152,7 @@ E1 --> E2 --> E3 --> E4 --> E5
 - [backend-tests/nestjs/public/index.html:1-50](file://backend-tests/nestjs/public/index.html#L1-L50)
 - [backend-tests/nestjs/public/style.css:1-30](file://backend-tests/nestjs/public/style.css#L1-L30)
 - [backend-tests/nestjs/template.json:1-20](file://backend-tests/nestjs/template.json#L1-L20)
-- [backend-tests/elysia/package.json:1-15](file://backend-tests/elysia/package.json#L1-L15)
+- [backend-tests/elysia/package.json:1-13](file://backend-tests/elysia/package.json#L1-L13)
 - [backend-tests/elysia/app.js:1-52](file://backend-tests/elysia/app.js#L1-L52)
 - [backend-tests/elysia/meta.json:1-14](file://backend-tests/elysia/meta.json#L1-L14)
 - [backend-tests/elysia/public/index.html:1-50](file://backend-tests/elysia/public/index.html#L1-L50)
@@ -166,6 +168,7 @@ E1 --> E2 --> E3 --> E4 --> E5
   - 入口与运行：使用Koa实例并通过监听端口的方式启动服务
   - 路由与中间件：集成路由与请求体解析中间件
   - **新增**：演示页面和静态文件服务，提供交互式测试界面
+  - **新增**：依赖覆盖机制，通过overrides确保generator-function版本一致性
   - 断言：包含健康检查、参数路由、POST回显与404断言
 - **更新**：Hono应用夹具
   - 入口与运行：导出Hono实例，供Web适配器以fetch风格调用
@@ -186,8 +189,8 @@ E1 --> E2 --> E3 --> E4 --> E5
 
 **章节来源**
 - [Koa-app/app.js:1-10](file://Koa-app/app.js#L1-L10)
-- [backend-tests/koa/server.js:1-26](file://backend-tests/koa/server.js#L1-L26)
-- [backend-tests/koa/meta.json:1-14](file://backend-tests/koa/meta.json#L1-L14)
+- [backend-tests/koa/server.js:1-40](file://backend-tests/koa/server.js#L1-L40)
+- [backend-tests/koa/meta.json:1-16](file://backend-tests/koa/meta.json#L1-L16)
 - [backend-tests/koa/public/index.html:1-50](file://backend-tests/koa/public/index.html#L1-L50)
 - [backend-tests/koa/public/style.css:1-30](file://backend-tests/koa/public/style.css#L1-L30)
 - [Hono-app/app.js:1-8](file://Hono-app/app.js#L1-L8)
@@ -203,7 +206,7 @@ E1 --> E2 --> E3 --> E4 --> E5
 - [backend-tests/nestjs/public/index.html:1-50](file://backend-tests/nestjs/public/index.html#L1-L50)
 - [backend-tests/nestjs/public/style.css:1-30](file://backend-tests/nestjs/public/style.css#L1-L30)
 - [backend-tests/elysia/app.js:1-52](file://backend-tests/elysia/app.js#L1-L52)
-- [backend-tests/elysia/package.json:1-15](file://backend-tests/elysia/package.json#L1-L15)
+- [backend-tests/elysia/package.json:1-13](file://backend-tests/elysia/package.json#L1-L13)
 - [backend-tests/elysia/meta.json:1-14](file://backend-tests/elysia/meta.json#L1-L14)
 
 ## 架构总览
@@ -255,7 +258,7 @@ ElysiaEntry-->>Runner : "断言匹配(状态码/响应体)"
 ```
 
 **图表来源**
-- [backend-tests/koa/server.js:1-26](file://backend-tests/koa/server.js#L1-L26)
+- [backend-tests/koa/server.js:1-40](file://backend-tests/koa/server.js#L1-L40)
 - [backend-tests/hono/app.js:1-60](file://backend-tests/hono/app.js#L1-L60)
 - [backend-tests/hono/fc/start.mjs:201-320](file://backend-tests/hono/fc/start.mjs#L201-L320)
 - [backend-tests/nestjs/dist/main.js:1-11](file://backend-tests/nestjs/dist/main.js#L1-L11)
@@ -272,10 +275,12 @@ ElysiaEntry-->>Runner : "断言匹配(状态码/响应体)"
   - 使用Koa实例并通过监听端口启动
   - 集成路由与请求体解析中间件
   - **新增**：public目录提供静态文件服务，包含演示页面和样式文件
+  - **新增**：依赖覆盖机制，通过overrides确保generator-function版本一致性
 - 关键实现要点
   - 中间件顺序：请求体解析需在路由之前
   - 路由设计：统一在根路径下提供健康检查、参数路由与POST回显
   - **新增**：静态文件中间件配置，支持HTML、CSS、JavaScript等静态资源
+  - **新增**：依赖覆盖机制，解决generator-function与is-generator-function之间的版本冲突
 - 断言与验证
   - 包含健康检查、参数路由、POST回显与404断言
   - 通过meta.json定义期望状态码与响应体子集
@@ -283,7 +288,8 @@ ElysiaEntry-->>Runner : "断言匹配(状态码/响应体)"
 
 ```mermaid
 flowchart TD
-Start(["Koa入口启动"]) --> SetupStatic["配置静态文件服务"]
+Start(["Koa入口启动"]) --> SetupOverrides["应用依赖覆盖机制"]
+SetupOverrides --> SetupStatic["配置静态文件服务"]
 SetupStatic --> UseBodyParser["使用请求体解析中间件"]
 UseBodyParser --> UseRouter["注册路由与方法"]
 UseRouter --> Listen["监听端口并等待请求"]
@@ -297,14 +303,15 @@ Respond --> End(["结束"])
 ```
 
 **图表来源**
-- [backend-tests/koa/server.js:1-26](file://backend-tests/koa/server.js#L1-L26)
+- [backend-tests/koa/server.js:1-40](file://backend-tests/koa/server.js#L1-L40)
 - [backend-tests/koa/meta.json:7-12](file://backend-tests/koa/meta.json#L7-L12)
+- [backend-tests/koa/package.json:15-18](file://backend-tests/koa/package.json#L15-L18)
 
 **章节来源**
 - [Koa-app/app.js:1-10](file://Koa-app/app.js#L1-L10)
-- [backend-tests/koa/server.js:1-26](file://backend-tests/koa/server.js#L1-L26)
-- [backend-tests/koa/meta.json:1-14](file://backend-tests/koa/meta.json#L1-L14)
-- [backend-tests/koa/package.json:1-11](file://backend-tests/koa/package.json#L1-L11)
+- [backend-tests/koa/server.js:1-40](file://backend-tests/koa/server.js#L1-L40)
+- [backend-tests/koa/meta.json:1-16](file://backend-tests/koa/meta.json#L1-L16)
+- [backend-tests/koa/package.json:1-20](file://backend-tests/koa/package.json#L1-L20)
 
 ### Hono组件分析
 - 项目结构与入口
@@ -408,7 +415,7 @@ Application --> StaticFileService : "配置静态文件服务"
 - [backend-tests/nestjs/src/app.controller.ts:1-20](file://backend-tests/nestjs/src/app.controller.ts#L1-L20)
 - [backend-tests/nestjs/dist/main.js:1-11](file://backend-tests/nestjs/dist/main.js#L1-L11)
 - [backend-tests/nestjs/meta.json:1-15](file://backend-tests/nestjs/meta.json#L1-L15)
-- [backend-tests/nestjs/package.json:1-21](file://backend-tests/nestjs/package.json#L1-L21)
+- [backend-tests/nestjs/package.json:1-28](file://backend-tests/nestjs/package.json#L1-L28)
 
 ### Elysia组件分析
 - 项目结构与入口
@@ -454,7 +461,7 @@ Respond --> End(["结束"])
 
 **章节来源**
 - [backend-tests/elysia/app.js:1-52](file://backend-tests/elysia/app.js#L1-L52)
-- [backend-tests/elysia/package.json:1-15](file://backend-tests/elysia/package.json#L1-L15)
+- [backend-tests/elysia/package.json:1-13](file://backend-tests/elysia/package.json#L1-L13)
 - [backend-tests/elysia/meta.json:1-14](file://backend-tests/elysia/meta.json#L1-L14)
 
 ## 静态文件服务与演示页面
@@ -567,9 +574,9 @@ ElysiaDemo --> ElysiaCSS
 
 ## 依赖关系分析
 - 依赖管理
-  - Koa夹具：依赖Koa、@koa/router、koa-bodyparser、**新增**：koa-static用于静态文件服务
+  - Koa夹具：依赖Koa、@koa/router、koa-bodyparser、koa-static用于静态文件服务，**新增**：通过overrides确保generator-function版本为'~1.0.0'，避免与is-generator-function的版本冲突
   - Hono夹具：依赖hono、**更新**：@hono/node-server（仅用于函数计算适配器），**移除**：@hono/node-server/serve-static中间件
-  - NestJS夹具：依赖@nestjs/common、@nestjs/core、@nestjs/platform-express、reflect-metadata、rxjs，并包含TypeScript与构建脚本
+  - NestJS夹具：依赖@nestjs/common、@nestjs/core、@nestjs/platform-express、@nestjs/serve-static、reflect-metadata、rxjs，并包含TypeScript与构建脚本
   - **新增**：Elysia夹具：依赖elysia、@elysiajs/node，移除了对@elysiajs/static插件的依赖
 - 运行与断言
   - 四类夹具均通过meta.json定义断言规则，包括路径、方法、期望状态码、响应体子集等
@@ -581,6 +588,7 @@ ElysiaDemo --> ElysiaCSS
 graph TB
 KoaPkg["Koa包依赖"] --> KoaApp["Koa应用"]
 KoaStatic["koa-static"] --> KoaApp
+KoaOverrides["overrides: generator-function ~1.0.0"] --> KoaApp
 HonoPkg["Hono包依赖"] --> HonoApp
 HonoNodeServer["@hono/node-server"] --> HonoApp
 HonoFC["函数计算适配器"] --> HonoApp
@@ -602,11 +610,11 @@ ElysiaApp --> ElysiaMeta["Elysia断言(meta.json)"]
 ```
 
 **图表来源**
-- [backend-tests/koa/package.json:1-11](file://backend-tests/koa/package.json#L1-L11)
+- [backend-tests/koa/package.json:1-20](file://backend-tests/koa/package.json#L1-L20)
 - [backend-tests/hono/package.json:1-13](file://backend-tests/hono/package.json#L1-L13)
-- [backend-tests/nestjs/package.json:1-21](file://backend-tests/nestjs/package.json#L1-L21)
-- [backend-tests/elysia/package.json:1-15](file://backend-tests/elysia/package.json#L1-L15)
-- [backend-tests/koa/meta.json:1-14](file://backend-tests/koa/meta.json#L1-L14)
+- [backend-tests/nestjs/package.json:1-28](file://backend-tests/nestjs/package.json#L1-L28)
+- [backend-tests/elysia/package.json:1-13](file://backend-tests/elysia/package.json#L1-L13)
+- [backend-tests/koa/meta.json:1-16](file://backend-tests/koa/meta.json#L1-L16)
 - [backend-tests/hono/meta.json:1-16](file://backend-tests/hono/meta.json#L1-L16)
 - [backend-tests/nestjs/meta.json:1-15](file://backend-tests/nestjs/meta.json#L1-L15)
 - [backend-tests/elysia/meta.json:1-14](file://backend-tests/elysia/meta.json#L1-L14)
@@ -614,13 +622,24 @@ ElysiaApp --> ElysiaMeta["Elysia断言(meta.json)"]
 **章节来源**
 - [backend-tests/README.md:38-84](file://backend-tests/README.md#L38-L84)
 
+### Koa依赖覆盖机制详解
+**新增**：Koa测试夹具引入了重要的依赖覆盖机制，通过package.json的overrides部分确保generator-function版本的一致性：
+
+- **问题背景**：在某些情况下，is-generator-function和generator-function之间可能存在版本冲突
+- **解决方案**：通过overrides配置强制使用generator-function版本'~1.0.0'
+- **实施效果**：确保依赖解析的一致性和避免与其他依赖产生冲突
+- **技术意义**：体现了现代Node.js包管理的最佳实践，通过明确的版本覆盖解决潜在的依赖地狱问题
+
+**章节来源**
+- [backend-tests/koa/package.json:15-18](file://backend-tests/koa/package.json#L15-L18)
+
 ## 性能考量
 - 启动时间与预热
   - NestJS夹具包含较长的warmup超时配置，适用于需要初始化容器与模块的企业级应用
   - **新增**：Elysia框架的类型安全特性可能带来轻微的启动开销，但提供了更好的开发体验
   - **新增**：静态文件服务可能增加启动时间和内存占用
 - 路由与中间件
-  - Koa通过中间件链路处理请求，合理安排中间件顺序可减少不必要的解析开销
+  - Koa通过中间件链路处理请求，合理安排中间件顺序可减少不必要的解析开销，**新增**：依赖覆盖机制确保运行时稳定性
   - Hono以fetch风格直接返回响应，适合边缘计算与Web适配器场景，**更新**：自定义静态文件服务避免了第三方中间件的额外开销
   - **新增**：Elysia的静态文件服务使用fs.readFileSync，避免了第三方中间件的额外开销
   - **新增**：静态文件服务中间件需要考虑缓存策略以提升性能
@@ -637,8 +656,9 @@ ElysiaApp --> ElysiaMeta["Elysia断言(meta.json)"]
   - 端口占用：调整监听端口或释放占用端口
   - 依赖缺失：确保安装所有必需依赖
   - **新增**：静态文件服务失败：检查public目录权限和文件完整性
+  - **新增**：依赖冲突：检查overrides配置是否正确应用
 - 特定框架问题
-  - Koa：确认中间件顺序与路由注册位置，**新增**：检查静态文件中间件配置
+  - Koa：确认中间件顺序与路由注册位置，**新增**：检查静态文件中间件配置和依赖覆盖机制
   - Hono：确认导出的app实例被适配器正确调用，**更新**：验证自定义静态文件服务的MIME类型映射和安全检查，**新增**：检查函数计算适配器配置
   - NestJS：确认dist/main.js可执行且模块初始化无异常，**新增**：检查静态文件服务集成
   - **新增**：Elysia：确认node适配器正确配置，验证静态文件服务的MIME类型映射和安全检查
@@ -648,11 +668,11 @@ ElysiaApp --> ElysiaMeta["Elysia断言(meta.json)"]
 - [backend-tests/README.md:112-116](file://backend-tests/README.md#L112-L116)
 
 ## 结论
-- Koa：轻量、灵活，适合快速搭建REST API与中间件生态丰富场景，**新增**：完善的静态文件服务和演示页面支持
+- Koa：轻量、灵活，适合快速搭建REST API与中间件生态丰富场景，**新增**：完善的静态文件服务和演示页面支持，**新增**：通过依赖覆盖机制确保运行时稳定性
 - **更新**：Hono：极简、原生fetch风格，适合边缘与云函数环境，**重大更新**：采用自定义静态文件服务实现，提供更好的安全性、性能和可控性，**新增**：简洁的演示页面和交互式测试功能
 - NestJS：企业级架构，模块化与装饰器带来强约束与高可维护性，但需要编译与初始化成本，**新增**：完整的静态文件服务集成和演示页面系统
 - **新增**：Elysia：类型安全的现代框架，通过手动实现静态文件服务替代第三方插件，提供更好的安全性与可控性，适合追求类型安全和性能的应用场景
-- 四者均已在本仓库夹具中通过断言验证，**新增**：演示页面和静态文件服务增强了用户体验和测试效率，**更新**：Hono的重构展示了从第三方依赖到自定义实现的安全升级路径
+- 四者均已在本仓库夹具中通过断言验证，**新增**：演示页面和静态文件服务增强了用户体验和测试效率，**更新**：Hono的重构展示了从第三方依赖到自定义实现的安全升级路径，**新增**：Koa的依赖覆盖机制体现了现代包管理的最佳实践
 
 ## 附录
 - 框架检测机制
@@ -661,6 +681,7 @@ ElysiaApp --> ElysiaMeta["Elysia断言(meta.json)"]
   - **新增**：检测逻辑已更新以识别演示页面和静态文件服务的存在
   - **更新**：Hono框架的自定义静态文件服务实现和函数计算适配器
   - **新增**：Elysia框架的类型安全特性和手动静态文件服务实现
+  - **新增**：Koa框架的依赖覆盖机制检测
 - 运行与接入
   - 通过blackBox入口脚本运行夹具测试，支持单夹具运行与批量运行
   - 退出码约定：0表示全部断言通过，1表示至少一个断言失败或启动失败

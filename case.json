@@ -298,7 +298,7 @@
     "name": "Express 项目（写了 app.listen）能正确识别并打包为后端",
     "envs": {
       "ERName": "test-for-aone-ci",
-      "RootDirectory": "/Express-listen",
+      "RootDirectory": "/backend-tests/express-listen",
       "InstallCommand": "npm install --no-audit --no-fund",
       "BuildCommand": "",
       "AssetsDirectory": "",
@@ -317,7 +317,7 @@
     "name": "Hono 项目（用 fetch 风格导出）能正确识别并打包为后端",
     "envs": {
       "ERName": "test-for-aone-ci",
-      "RootDirectory": "/Hono-app",
+      "RootDirectory": "/backend-tests/hono",
       "InstallCommand": "npm install --no-audit --no-fund",
       "BuildCommand": "",
       "AssetsDirectory": "",
@@ -329,44 +329,6 @@
       "Detected backend project",
       "nft trace finished:",
       "Backend zip created:",
-      "<<LOG>>step|buildEnd<</LOG>>"
-    ]
-  },
-  {
-    "name": "Koa 项目能正确识别并打包为后端",
-    "envs": {
-      "ERName": "test-for-aone-ci",
-      "RootDirectory": "/Koa-app",
-      "InstallCommand": "npm install --no-audit --no-fund",
-      "BuildCommand": "",
-      "AssetsDirectory": "",
-      "EREntry": ""
-    },
-    "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
-    "requireLogTextList": [
-      "Detected backend project",
-      "nft trace finished:",
-      "Backend zip created:",
-      "<<LOG>>step|buildEnd<</LOG>>"
-    ]
-  },
-  {
-    "name": "纯 API 项目（无框架，只有 /api 下几个 handler 文件）能自动起多路由 dispatcher",
-    "envs": {
-      "ERName": "test-for-aone-ci",
-      "RootDirectory": "/FcHandlers-basic",
-      "InstallCommand": "",
-      "BuildCommand": "",
-      "AssetsDirectory": "",
-      "EREntry": ""
-    },
-    "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
-    "requireLogTextList": [
-      "No backend framework but /api/ has FC handler files",
-      "fc-bundle finished: 3 routes",
-      "FC handlers zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
   },
@@ -432,43 +394,7 @@
     "name": "Express 项目（不调 listen、直接 module.exports = app）也能识别并打包",
     "envs": {
       "ERName": "test-for-aone-ci",
-      "RootDirectory": "/Express-export",
-      "InstallCommand": "npm install --no-audit --no-fund",
-      "BuildCommand": "",
-      "AssetsDirectory": "",
-      "EREntry": ""
-    },
-    "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
-    "requireLogTextList": [
-      "Detected backend project",
-      "Backend zip created:",
-      "<<LOG>>step|buildEnd<</LOG>>"
-    ]
-  },
-  {
-    "name": "Fastify 项目能正确识别并打包为后端",
-    "envs": {
-      "ERName": "test-for-aone-ci",
-      "RootDirectory": "/Fastify-app",
-      "InstallCommand": "npm install --no-audit --no-fund",
-      "BuildCommand": "",
-      "AssetsDirectory": "",
-      "EREntry": ""
-    },
-    "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
-    "requireLogTextList": [
-      "Detected backend project",
-      "Backend zip created:",
-      "<<LOG>>step|buildEnd<</LOG>>"
-    ]
-  },
-  {
-    "name": "NestJS 项目（入口在 src/main.ts）能正确识别并打包",
-    "envs": {
-      "ERName": "test-for-aone-ci",
-      "RootDirectory": "/NestJS-app",
+      "RootDirectory": "/backend-tests/express-export",
       "InstallCommand": "npm install --no-audit --no-fund",
       "BuildCommand": "",
       "AssetsDirectory": "",
@@ -516,25 +442,6 @@
     "requireLogTextList": [
       "Detected backend project",
       "Backend zip created:",
-      "<<LOG>>step|buildEnd<</LOG>>"
-    ]
-  },
-  {
-    "name": "/api 用 index.js 当父路径入口（api/users/index.js 对应 URL /api/users）",
-    "envs": {
-      "ERName": "test-for-aone-ci",
-      "RootDirectory": "/FcHandlers-index",
-      "InstallCommand": "",
-      "BuildCommand": "",
-      "AssetsDirectory": "",
-      "EREntry": ""
-    },
-    "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
-    "requireLogTextList": [
-      "No backend framework but /api/ has FC handler files",
-      "fc-bundle finished: 2 routes",
-      "FC handlers zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
   },

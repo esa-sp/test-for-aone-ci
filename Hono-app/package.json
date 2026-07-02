@@ -1,8 +1,0 @@
-{
-  "name": "hono-app-fixture",
-  "version": "0.0.0",
-  "private": true,
-  "dependencies": {
-    "hono": "^4.0.0"
-  }
-}
