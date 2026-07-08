@@ -3,174 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Express TypeScript 后端示例 · backend-tests</title>
+  <title>Express Example — TypeScript</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="hero"><div class="container">
-    <span class="badge-framework" id="badge-framework"></span>
-    <h1 id="hero-title"></h1>
-    <p class="tagline" id="hero-tagline"></p>
-    <div class="hero-actions" id="hero-actions"></div>
-  </div></header>
-  <section id="features-section"><div class="container">
-    <h2>框架特色写法</h2>
-    <p class="section-desc">TypeScript 接口 · 类型安全路由 · tsc 编译 · 配置中心场景。</p>
-    <div class="feature-grid" id="feature-grid"></div>
-  </div></section>
-  <section id="endpoints-section" style="background: var(--color-bg-soft);"><div class="container">
-    <h2>实时接口演示</h2>
-    <p class="section-desc">点击「试一试」直接调用本示例的 API。</p>
-    <div class="endpoint-list" id="endpoint-list"></div>
-  </div></section>
-  <footer class="footer"><div class="container">
-    <h2>平台能力</h2>
-    <div class="tag-list" id="tag-list"></div>
-    <p class="footer-meta" id="footer-meta"></p>
-  </div></footer>
+  <nav class="nav">
+    <div class="container">
+      <img class="nav-logo" src="https://cdn.simpleicons.org/express" alt="Express" onerror="this.style.display='none'" />
+      <span class="nav-title">Express</span>
+      <span class="nav-version">TypeScript</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <h1>Express Example</h1>
+      <p class="tagline">TypeScript with typed routers, DTOs, and interface-driven controllers.</p>
+      <pre class="code-block"><code><span class="c">// src/index.ts</span>
+<span class="k">import</span> express <span class="k">from</span> <span class="s">'express'</span>
+<span class="k">const</span> app = <span class="f">express</span>()
+
+app.<span class="f">use</span>(<span class="s">'/api/health'</span>, healthRouter)  <span class="c">// typed Router</span>
+app.<span class="f">use</span>(<span class="s">'/api/users'</span>,  userRouter)
+app.<span class="f">use</span>(<span class="s">'/api/config'</span>, configRouter)
+
+<span class="c">// src/routes/users.ts</span>
+userRouter.<span class="f">get</span>(<span class="s">'/:id'</span>, (req: Request, res: Response) => {
+  <span class="k">const</span> user = users.<span class="f">get</span>(req.params.id)
+  res.<span class="f">json</span>(user)
+})</code></pre>
+    </div>
+  </header>
+
+  <section>
+    <div class="container">
+      <h2>API Endpoints</h2>
+      <p class="section-desc">Fully typed Express app with separate route files for health, users, and config.</p>
+      <div class="endpoint-list" id="endpoint-list"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Built with <a href="https://expressjs.com" target="_blank" rel="noopener">Express</a> + TypeScript</p>
+    </div>
+  </footer>
+
   <script>
-    const PAGE_CONFIG = {
-      framework: "Express + TypeScript", frameworkSlug: "express-typescript",
-      tagline: "Express + TypeScript 强类型，演示接口定义、类型安全路由与配置中心 API。",
-      deployUrl: "{{DEPLOY_URL}}", demoUrl: "{{DEMO_URL}}",
-      features: [
-        { icon: "🔷", title: "TypeScript 接口", desc: "interface User / AppConfig 定义数据结构，编译时类型检查。" },
-        { icon: "🛡️", title: "类型安全路由", desc: "Request/Response 泛型类型，req.params 类型推断。" },
-        { icon: "⚙️", title: "tsc 编译", desc: "postinstall 自动 tsc 编译到 dist/，平台直接运行 dist/index.js。" },
-        { icon: "📄", title: "静态托管", desc: "express.static 托管 public/，路径 path.join(__dirname, '..', 'public')。" }
-      ],
-      endpoints: [
-        { method: "GET", path: "/api/health", desc: "健康检查 · 配置中心服务状态" },
-        { method: "GET", path: "/api/users/7", desc: "获取用户信息（类型安全路由）" },
-        { method: "POST", path: "/api/users", desc: "创建用户", body: { name: "bob", email: "bob@test.com" } },
-        { method: "GET", path: "/api/config", desc: "获取配置（AppConfig 接口）" },
-        { method: "GET", path: "/nope", desc: "不存在的路径 · 返回 404" }
-      ],
-      productTags: ["零配置自动识别 Express","框架自动检测","一键部署到函数计算"]
-    };
-    const METHOD_CLASS = { GET: "get", POST: "post", PUT: "put", DELETE: "delete" };
-
-    const LOGO_MAP = { express:"https://cdn.simpleicons.org/express",fastify:"https://cdn.simpleicons.org/fastify",koa:"https://cdn.simpleicons.org/koa",hono:"https://cdn.simpleicons.org/hono",elysia:"https://elysiajs.com/assets/elysia.svg",nestjs:"https://cdn.simpleicons.org/nestjs",node:"https://cdn.simpleicons.org/nodedotjs",h3:"https://cdn.simpleicons.org/h3" };
-    function renderHero() {
-      const heroEl = document.querySelector('.hero .container');
-      const baseSlug = PAGE_CONFIG.frameworkSlug.split("-")[0];
-      const logoUrl = LOGO_MAP[baseSlug];
-      if (logoUrl) {
-        const logo = document.createElement('img');
-        logo.className = 'framework-logo'; logo.src = logoUrl; logo.alt = PAGE_CONFIG.framework;
-        logo.onerror = function() { this.style.display = 'none'; };
-        heroEl.insertBefore(logo, heroEl.firstChild);
-      }
-      document.getElementById("badge-framework").textContent = PAGE_CONFIG.framework;
-      document.title = PAGE_CONFIG.framework + " 后端示例 · backend-tests";
-      document.getElementById("hero-title").textContent = PAGE_CONFIG.framework + " 后端示例 · 配置中心";
-      document.getElementById("hero-tagline").textContent = PAGE_CONFIG.tagline;
-      const actions = document.getElementById("hero-actions");
-      const deploy = document.createElement("a");
-      deploy.className = "btn btn-primary"; deploy.href = PAGE_CONFIG.deployUrl;
-      deploy.textContent = "一键部署"; deploy.target = "_blank"; deploy.rel = "noopener";
-      actions.appendChild(deploy);
-      const demo = document.createElement("a");
-      demo.className = "btn btn-outline"; demo.href = PAGE_CONFIG.demoUrl;
-      demo.textContent = "在线 Demo"; demo.target = "_blank"; demo.rel = "noopener";
-      actions.appendChild(demo);
-    }
-
-    function renderFeatures() {
-      const grid = document.getElementById("feature-grid");
-      PAGE_CONFIG.features.forEach((f) => {
-        const card = document.createElement("div");
-        card.className = "feature-card";
-        card.innerHTML = '<div class="feat-icon">' + f.icon + "</div><h3>" + f.title + "</h3><p>" + f.desc + "</p>";
-        grid.appendChild(card);
-      });
-    }
-
-    function renderEndpoints() {
-      const list = document.getElementById("endpoint-list");
-      PAGE_CONFIG.endpoints.forEach((ep) => {
-        const card = document.createElement("div");
-        card.className = "endpoint-card";
-        const head = document.createElement("div");
-        head.className = "endpoint-head";
-        const tag = document.createElement("span");
-        tag.className = "method-tag " + (METHOD_CLASS[ep.method] || "get");
-        tag.textContent = ep.method;
-        const pathEl = document.createElement("span");
-        pathEl.className = "endpoint-path";
-        pathEl.textContent = ep.path;
-        head.appendChild(tag); head.appendChild(pathEl);
-        const desc = document.createElement("p");
-        desc.className = "endpoint-desc"; desc.textContent = ep.desc;
-        const actions = document.createElement("div");
-        actions.className = "endpoint-actions";
-        const btn = document.createElement("button");
-        btn.className = "btn btn-primary btn-sm"; btn.textContent = "试一试";
-        const respBox = document.createElement("div");
-        respBox.className = "response-box";
-        respBox.innerHTML = '<span class="resp-placeholder">点击「试一试」查看响应…</span>';
-        btn.addEventListener("click", () => callEndpoint(ep, respBox, btn));
-        actions.appendChild(btn);
-        card.appendChild(head); card.appendChild(desc);
-        if (ep.body) {
-          const bodyHint = document.createElement("p");
-          bodyHint.className = "endpoint-desc";
-          bodyHint.style.fontFamily = "var(--font-mono)";
-          bodyHint.textContent = "请求体: " + JSON.stringify(ep.body);
-          card.appendChild(bodyHint);
-        }
-        card.appendChild(actions); card.appendChild(respBox);
-        list.appendChild(card);
-      });
-    }
-
-    async function callEndpoint(ep, respBox, btn) {
-      const original = btn.textContent;
-      btn.textContent = "";
-      const spinner = document.createElement("span");
-      spinner.className = "spinner";
-      btn.appendChild(spinner);
-      btn.disabled = true;
-      respBox.innerHTML = "";
-      try {
-        const opts = { method: ep.method, headers: {} };
-        if (ep.body) {
-          opts.headers["content-type"] = "application/json";
-          opts.body = JSON.stringify(ep.body);
-        }
-        const res = await fetch(ep.path, opts);
-        const text = await res.text();
-        let pretty = text;
-        try { pretty = JSON.stringify(JSON.parse(text), null, 2); } catch (e) {}
-        const statusEl = document.createElement("span");
-        statusEl.className = "resp-status " + (res.ok ? "ok" : "err");
-        statusEl.textContent = res.status + " " + res.statusText;
-        respBox.appendChild(statusEl);
-        respBox.appendChild(document.createTextNode("\n" + pretty));
-      } catch (err) {
-        const statusEl = document.createElement("span");
-        statusEl.className = "resp-status err";
-        statusEl.textContent = "请求失败";
-        respBox.appendChild(statusEl);
-        respBox.appendChild(document.createTextNode("\n" + err.message));
-      } finally {
-        btn.disabled = false;
-        btn.textContent = original;
-      }
-    }
-
-    function renderFooter() {
-      const list = document.getElementById("tag-list");
-      PAGE_CONFIG.productTags.forEach((t) => {
-        const tag = document.createElement("span");
-        tag.className = "tag"; tag.textContent = t;
-        list.appendChild(tag);
-      });
-      document.getElementById("footer-meta").textContent =
-        "本示例由平台零配置打包部署 · 框架自动检测"
-    }
-
-    renderHero(); renderFeatures(); renderEndpoints(); renderFooter();
+    const ENDPOINTS = [
+      { method: "GET",  path: "/api/health", desc: "Health check" },
+      { method: "GET",  path: "/api/users/1", desc: "Get user by ID (typed)" },
+      { method: "POST", path: "/api/users", desc: "Create user (DTO validated)", body: { name: "Bob", email: "bob@test.com" } },
+      { method: "GET",  path: "/api/config", desc: "Get runtime config" },
+    ]
+    const METHOD_CLASS = { GET: "get", POST: "post", PUT: "put", DELETE: "delete" }
+    function renderEndpoints(){const l=document.getElementById("endpoint-list");ENDPOINTS.forEach(e=>{const c=document.createElement("div");c.className="endpoint-card";const h=document.createElement("div");h.className="endpoint-head";const t=document.createElement("span");t.className="method-tag "+(METHOD_CLASS[e.method]||"get"),t.textContent=e.method;const p=document.createElement("span");p.className="endpoint-path",p.textContent=e.path;h.appendChild(t),h.appendChild(p);const d=document.createElement("p");d.className="endpoint-desc",d.textContent=e.desc;const a=document.createElement("div");a.className="endpoint-actions";const b=document.createElement("button");b.className="btn-test",b.textContent="Send";const r=document.createElement("div");r.className="response-box",r.innerHTML='<span class="resp-placeholder">Click "Send" to see the response…</span>';b.addEventListener("click",()=>callEndpoint(e,r,b)),a.appendChild(b),c.appendChild(h),c.appendChild(d),e.body&&((o=>{const u=document.createElement("p");u.className="endpoint-body",u.textContent="Body: "+JSON.stringify(e.body),c.appendChild(u)})()),c.appendChild(a),c.appendChild(r),l.appendChild(c)})}
+    async function callEndpoint(e,r,b){const o=b.textContent;b.textContent="";const s=document.createElement("span");s.className="spinner",b.appendChild(s),b.disabled=!0,r.innerHTML="";try{const t={method:e.method,headers:{}};e.body&&(t.headers["content-type"]="application/json",t.body=JSON.stringify(e.body));const n=await fetch(e.path,t),a=await n.text();let p=a;try{p=JSON.stringify(JSON.parse(a),null,2)}catch(e){}const c=document.createElement("span");c.className="resp-status "+(n.ok?"ok":"err"),c.textContent=n.status+" "+n.statusText,r.appendChild(c),r.appendChild(document.createTextNode("\n"+p))}catch(t){const e=document.createElement("span");e.className="resp-status err",e.textContent="Request failed",r.appendChild(e),r.appendChild(document.createTextNode("\n"+t.message))}finally{b.disabled=!1,b.textContent=o}}
+    renderEndpoints()
   </script>
 </body>
 </html>

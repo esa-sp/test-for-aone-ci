@@ -2,37 +2,27 @@
 
 <cite>
 **本文档引用的文件**
-- [Fastify-app/README.md](file://Fastify-app/README.md)
-- [Fastify-app/package.json](file://Fastify-app/package.json)
-- [Fastify-app/server.js](file://Fastify-app/server.js)
+- [backend-tests/fastify/server.js](file://backend-tests/fastify/server.js)
 - [backend-tests/fastify/meta.json](file://backend-tests/fastify/meta.json)
 - [backend-tests/fastify/package.json](file://backend-tests/fastify/package.json)
-- [backend-tests/fastify/server.js](file://backend-tests/fastify/server.js)
+- [backend-tests/fastify-plugins/server.js](file://backend-tests/fastify-plugins/server.js)
 - [backend-tests/fastify-plugins/meta.json](file://backend-tests/fastify-plugins/meta.json)
 - [backend-tests/fastify-plugins/package.json](file://backend-tests/fastify-plugins/package.json)
-- [backend-tests/fastify-plugins/server.js](file://backend-tests/fastify-plugins/server.js)
 - [backend-tests/fastify-plugins/plugins/health.js](file://backend-tests/fastify-plugins/plugins/health.js)
 - [backend-tests/fastify-plugins/plugins/users.js](file://backend-tests/fastify-plugins/plugins/users.js)
 - [backend-tests/fastify-plugins/plugins/products.js](file://backend-tests/fastify-plugins/plugins/products.js)
 - [backend-tests/fastify-plugins/services/userService.js](file://backend-tests/fastify-plugins/services/userService.js)
 - [backend-tests/README.md](file://backend-tests/README.md)
-- [backend-tests/express-listen/server.js](file://backend-tests/express-listen/server.js)
-- [backend-tests/koa/server.js](file://backend-tests/koa/server.js)
-- [backend-tests/nestjs/src/main.ts](file://backend-tests/nestjs/src/main.ts)
-- [backend-tests/hono/app.js](file://backend-tests/hono/app.js)
-- [backend-tests/h3/server.js](file://backend-tests/h3/server.js)
-- [backend-tests/fastify-plugins/public/index.html](file://backend-tests/fastify-plugins/public/index.html)
-- [backend-tests/fastify-plugins/public/style.css](file://backend-tests/fastify-plugins/public/style.css)
 </cite>
 
 ## 更新摘要
 **所做更改**
-- 更新了插件系统支持部分，反映新增的高级插件架构实现
-- 增强了响应模式验证机制的说明
-- 添加了高级静态文件服务功能的详细分析
-- 更新了性能对比分析，包含最新的插件架构性能数据
-- 完善了故障排除指南，涵盖插件相关问题
-- 移除了@fastify/static插件的使用，反映新的框架检测系统要求
+- 更新了项目结构部分，反映Fastify测试用例从根目录迁移至backend-tests目录的新布局
+- 新增了高级插件架构实现的详细分析，包括多插件注册模式和服务层封装
+- 增强了静态文件托管功能的说明，基于@fastify/static插件的实现
+- 更新了依赖关系分析，包含最新的插件生态系统支持
+- 完善了测试断言系统，涵盖多插件环境下的路由验证
+- 移除了对已删除的Fastify-app目录的引用，统一使用backend-tests目录结构
 
 ## 目录
 1. [简介](#简介)
@@ -58,46 +48,40 @@
 
 Fastify的检测机制、构建流程和部署策略确保了框架的稳定性和可靠性。
 
-**更新** 新增对Fastify高级插件架构实现的详细分析，展示基于插件的模组化能力和多插件注册模式的实际应用。本次更新重点反映了测试套件的重大增强，包括插件系统支持、响应模式验证和高级静态文件服务功能。根据最新变更，移除了@fastify/static插件的使用，以适应新的框架检测系统要求。
+**更新** 本次更新反映了Fastify测试用例的重大重构，已从根目录的Fastify-app迁移至backend-tests/fastify和backend-tests/fastify-plugins两个独立的测试套件。新增的高级插件架构展示了Fastify的模组化能力，包括多插件注册模式、服务层封装和独立插件开发的最佳实践。
 
 ## 项目结构
 
-该项目包含多个框架的测试案例，专门用于验证不同Web框架的实现和性能表现。Fastify相关的测试结构现在包括基础实现和高级插件架构两个层面：
+该项目包含多个框架的测试案例，专门用于验证不同Web框架的实现和性能表现。Fastify相关的测试结构现在分为基础实现和高级插件架构两个层面：
 
 ```mermaid
 graph TB
 subgraph "Fastify测试结构"
-FA[Fastify-app/] --> FAPkg[package.json]
-FA --> FAServer[server.js]
-FA --> FAReadme[README.md]
 BT[backend-tests/] --> FB[fastify/]
-FB --> FBMeta[meta.json]
 FB --> FBServer[server.js]
-FB --> FBPackage[package.json]
+FB --> FBMeta[meta.json]
+FB --> FBPkg[package.json]
+FB --> FBStatic[public/]
+FBStatic --> FBIndex[index.html]
+FBStatic --> FBStyle[style.css]
 BT --> FP[fastify-plugins/]
 FP --> FPServer[server.js]
+FP --> FPMeta[meta.json]
+FP --> FPPkg[package.json]
 FP --> FPPlugins[plugins/]
 FP --> FPService[services/]
-FP --> FPPluginsHealth[plugins/health.js]
-FP --> FPPluginsUsers[plugins/users.js]
-FP --> FPPluginsProducts[plugins/products.js]
-FP --> FPServiceUser[userService.js]
-FP --> FPMeta[meta.json]
-FP --> FPPackage[package.json]
 FP --> FPStatic[public/]
 FPStatic --> FPIndex[index.html]
 FPStatic --> FPStyle[style.css]
-BT --> EX[express-listen/]
-BT --> KO[Koa-app/]
-BT --> NE[NestJS-app/]
-BT --> HO[Hono-app/]
-BT --> H3[h3/]
+FPPlugins --> FPHealth[plugins/health.js]
+FPPlugins --> FPUsers[plugins/users.js]
+FPPlugins --> FPProducts[plugins/products.js]
+FPService --> FPUserService[services/userService.js]
 end
 ```
 
 **图表来源**
-- [Fastify-app/README.md:1-6](file://Fastify-app/README.md#L1-L6)
-- [backend-tests/README.md:18-28](file://backend-tests/README.md#L18-L28)
+- [backend-tests/fastify/server.js:1-98](file://backend-tests/fastify/server.js#L1-L98)
 - [backend-tests/fastify-plugins/server.js:1-20](file://backend-tests/fastify-plugins/server.js#L1-L20)
 
 **章节来源**
@@ -107,7 +91,7 @@ end
 
 ### Fastify应用组件
 
-Fastify应用的核心组件包括服务器实例、路由定义和监听配置。最小化实现展示了Fastify的基本使用方式：
+Fastify应用的核心组件包括服务器实例、路由定义和监听配置。基础实现展示了Fastify的基本使用方式，包括静态文件托管和响应模式验证：
 
 ```mermaid
 classDiagram
@@ -127,33 +111,28 @@ class RouteHandler {
 +validateRequest() boolean
 +processResponse() Object
 }
-class PluginSystem {
-+Array plugins
-+Object hooks
-+register(plugin) void
-+executeHook(hookName) void
+class StaticFileHandler {
++String rootPath
++String prefix
++serveStatic(file) void
 }
-class PluginArchitecture {
-+Object healthPlugin
-+Object usersPlugin
-+Object productsPlugin
-+registerPlugins() void
-+setupPrefixes() void
+class ResponseSchema {
++Object schema
++validateResponse(data) boolean
++serializeData(data) string
 }
 FastifyServer --> RouteHandler : "管理"
-FastifyServer --> PluginSystem : "使用"
-RouteHandler --> PluginSystem : "可选插件"
-PluginSystem --> PluginArchitecture : "实现"
+FastifyServer --> StaticFileHandler : "集成"
+RouteHandler --> ResponseSchema : "验证"
 ```
 
 **图表来源**
-- [Fastify-app/server.js:1-8](file://Fastify-app/server.js#L1-L8)
-- [backend-tests/fastify/server.js:1-17](file://backend-tests/fastify/server.js#L1-L17)
-- [backend-tests/fastify-plugins/server.js:4-7](file://backend-tests/fastify-plugins/server.js#L4-L7)
+- [backend-tests/fastify/server.js:6-12](file://backend-tests/fastify/server.js#L6-L12)
+- [backend-tests/fastify/server.js:15-29](file://backend-tests/fastify/server.js#L15-L29)
 
 ### 高级插件架构组件
 
-新增的高级插件架构展示了Fastify的模组化能力：
+新增的高级插件架构展示了Fastify的模组化能力，通过独立的插件模块实现功能分离：
 
 ```mermaid
 graph TB
@@ -165,7 +144,6 @@ ProductsPlugin[产品管理插件]
 end
 subgraph "服务层"
 UserService[用户服务]
-ProductService[产品服务]
 end
 subgraph "路由前缀"
 UsersPrefix[/api/users]
@@ -175,7 +153,6 @@ HealthPlugin --> UsersPrefix
 UsersPlugin --> UsersPrefix
 ProductsPlugin --> ProductsPrefix
 UserService --> UsersPlugin
-ProductService --> ProductsPlugin
 end
 ```
 
@@ -186,7 +163,7 @@ end
 
 ### 测试断言组件
 
-测试断言系统提供了完整的HTTP请求验证机制：
+测试断言系统提供了完整的HTTP请求验证机制，支持基础路由和多插件环境的测试：
 
 | 组件类型 | 功能描述 | 配置参数 |
 |---------|----------|----------|
@@ -199,8 +176,8 @@ end
 | 静态文件 | 验证HTML页面 | `path: "/"` |
 
 **章节来源**
-- [backend-tests/fastify/meta.json:8-13](file://backend-tests/fastify/meta.json#L8-L13)
-- [backend-tests/fastify-plugins/meta.json:8-19](file://backend-tests/fastify-plugins/meta.json#L8-L19)
+- [backend-tests/fastify/meta.json:8-14](file://backend-tests/fastify/meta.json#L8-L14)
+- [backend-tests/fastify-plugins/meta.json:8-16](file://backend-tests/fastify-plugins/meta.json#L8-L16)
 
 ## 架构概览
 
@@ -246,7 +223,7 @@ PluginManager --> PluginValidator
 
 **图表来源**
 - [backend-tests/README.md:3-16](file://backend-tests/README.md#L3-L16)
-- [backend-tests/fastify-plugins/server.js:4-7](file://backend-tests/fastify-plugins/server.js#L4-L7)
+- [backend-tests/fastify-plugins/server.js:10-13](file://backend-tests/fastify-plugins/server.js#L10-L13)
 
 ## 详细组件分析
 
@@ -258,15 +235,14 @@ PluginManager --> PluginValidator
 sequenceDiagram
 participant Client as "客户端"
 participant Fastify as "Fastify实例"
-participant PluginLoader as "插件加载器"
+participant StaticPlugin as "静态文件插件"
 participant Router as "路由系统"
 participant Handler as "处理器"
 participant Listener as "监听器"
 Client->>Fastify : 创建实例
-Fastify->>PluginLoader : 加载插件
-PluginLoader->>PluginLoader : 注册插件并设置前缀
-PluginLoader->>Router : 绑定处理函数
-Fastify->>Router : 注册路由
+Fastify->>StaticPlugin : 注册静态文件托管
+StaticPlugin->>Router : 绑定静态路由
+Fastify->>Router : 注册API路由
 Router->>Handler : 绑定处理函数
 Fastify->>Listener : 启动监听
 Listener-->>Fastify : 监听成功
@@ -275,7 +251,8 @@ Note over Fastify,Handler : 异步处理请求
 ```
 
 **图表来源**
-- [backend-tests/fastify-plugins/server.js:4-13](file://backend-tests/fastify-plugins/server.js#L4-L13)
+- [backend-tests/fastify/server.js:6-12](file://backend-tests/fastify/server.js#L6-L12)
+- [backend-tests/fastify/server.js:94-97](file://backend-tests/fastify/server.js#L94-L97)
 
 #### 路由处理机制
 
@@ -297,11 +274,10 @@ NotFound --> Send
 ```
 
 **图表来源**
-- [backend-tests/fastify/server.js:6-10](file://backend-tests/fastify/server.js#L6-L10)
+- [backend-tests/fastify/server.js:32-52](file://backend-tests/fastify/server.js#L32-L52)
 
 **章节来源**
-- [Fastify-app/server.js:1-8](file://Fastify-app/server.js#L1-L8)
-- [backend-tests/fastify/server.js:1-17](file://backend-tests/fastify/server.js#L1-L17)
+- [backend-tests/fastify/server.js:1-98](file://backend-tests/fastify/server.js#L1-L98)
 - [backend-tests/fastify-plugins/server.js:1-20](file://backend-tests/fastify-plugins/server.js#L1-L20)
 
 ### 高级插件架构分析
@@ -313,7 +289,8 @@ NotFound --> Send
 ```mermaid
 flowchart TD
 Start[启动应用] --> CreateFastify[创建Fastify实例]
-CreateFastify --> RegisterHealth[注册健康检查插件]
+CreateFastify --> RegisterStatic[注册静态文件插件]
+RegisterStatic --> RegisterHealth[注册健康检查插件]
 RegisterHealth --> RegisterUsers[注册用户插件 - 带前缀]
 RegisterUsers --> RegisterProducts[注册产品插件 - 带前缀]
 RegisterProducts --> SetupPort[设置监听端口]
@@ -420,11 +397,11 @@ Success --> End
 ```
 
 **图表来源**
-- [backend-tests/fastify/meta.json:8-13](file://backend-tests/fastify/meta.json#L8-L13)
-- [backend-tests/fastify-plugins/meta.json:8-19](file://backend-tests/fastify-plugins/meta.json#L8-L19)
+- [backend-tests/fastify/meta.json:8-14](file://backend-tests/fastify/meta.json#L8-L14)
+- [backend-tests/fastify-plugins/meta.json:8-16](file://backend-tests/fastify-plugins/meta.json#L8-L16)
 
 **章节来源**
-- [backend-tests/fastify/meta.json:1-19](file://backend-tests/fastify/meta.json#L1-L19)
+- [backend-tests/fastify/meta.json:1-17](file://backend-tests/fastify/meta.json#L1-L17)
 - [backend-tests/fastify-plugins/meta.json:1-19](file://backend-tests/fastify-plugins/meta.json#L1-L19)
 
 ### 性能对比分析
@@ -435,8 +412,8 @@ Success --> End
 
 | 框架 | 启动模式 | 监听端口 | 路由数量 | 请求处理时间 | 内存占用 | 插件支持 |
 |------|----------|----------|----------|--------------|----------|----------|
-| Fastify | direct | 8080 | 3 | ~1-2ms | 低 | 基础 |
-| Fastify + 插件 | direct | 3000 | 6 | ~1-2ms | 低 | 高级 |
+| Fastify | direct | 3000 | 4 | ~1-2ms | 低 | 基础 + 静态文件 |
+| Fastify + 插件 | direct | 3000 | 6 | ~1-2ms | 低 | 高级 + 静态文件 |
 | Express | app.listen | 8080 | 3 | ~2-3ms | 中等 | 无 |
 | Koa | app.listen | 8080 | 3 | ~2-3ms | 中等 | 无 |
 | Hono | fetch | 8080 | 3 | ~1-2ms | 低 | 无 |
@@ -500,10 +477,11 @@ P3 --> M2
 ```mermaid
 graph TB
 subgraph "Fastify生态系统"
-Fastify[Fastify ^4.x] --> Ajv[Ajv JSON Schema验证]
+Fastify[Fastify ^4.26.0] --> Ajv[Ajv JSON Schema验证]
 Fastify --> Pino[Pino 日志]
 Fastify --> UnderPressure[压力测试中间件]
 Fastify --> Autoload[@fastify/autoload ^5.8.0]
+Fastify --> Static[@fastify/static ^7.0.0]
 end
 subgraph "测试依赖"
 TestRunner[Jest/Mocha] --> Axios[Axios HTTP客户端]
@@ -521,9 +499,8 @@ Prettier -.-> TypeScript
 ```
 
 **图表来源**
-- [Fastify-app/package.json:5-7](file://Fastify-app/package.json#L5-L7)
-- [backend-tests/fastify/package.json:5-7](file://backend-tests/fastify/package.json#L5-L7)
-- [backend-tests/fastify-plugins/package.json:5-14](file://backend-tests/fastify-plugins/package.json#L5-L14)
+- [backend-tests/fastify/package.json:8-11](file://backend-tests/fastify/package.json#L8-L11)
+- [backend-tests/fastify-plugins/package.json:8-12](file://backend-tests/fastify-plugins/package.json#L8-L12)
 
 ### 构建和部署流程
 
@@ -667,8 +644,6 @@ OptimizeStaticFiles --> Test
 Test --> Resolve[问题解决]
 ```
 
-**更新** 新增了静态文件相关的故障排除指南，包括静态文件404错误的诊断和解决方案。根据最新变更，移除了@fastify/static插件的使用，因此相关的静态文件配置问题需要特别关注。
-
 **章节来源**
 - [backend-tests/README.md:126-133](file://backend-tests/README.md#L126-L133)
 
@@ -724,12 +699,12 @@ Fastify高性能框架测试文档展示了现代Web框架的测试策略和最�
 - **故障排除机制**：系统化的问题诊断和解决方案
 - **高级插件架构**：展示Fastify的模组化能力和多插件协作
 
-**更新** 新增的Fastify插件架构实现展示了高级框架模组化能力，包括：
-- 多插件注册模式的实际应用
-- 插件前缀管理和路由组织
-- 独立插件开发和服务封装
-- 插件间的协作和通信机制
-- 移除了@fastify/static插件的使用，以适应新的框架检测系统要求
+**更新** 本次更新重点反映了Fastify测试用例的重大重构，从根目录迁移至backend-tests目录，并新增了高级插件架构支持。新的测试结构包括：
+
+- **基础Fastify测试**：位于backend-tests/fastify，展示基本的Fastify应用实现
+- **高级插件架构测试**：位于backend-tests/fastify-plugins，演示多插件注册模式和服务层封装
+- **静态文件托管**：基于@fastify/static插件的完整实现
+- **响应模式验证**：利用Fastify的schema验证机制进行数据类型校验
 
 这些测试实践为Fastify框架的稳定性和性能提供了有力保障，同时也为其他Web框架的测试提供了参考模板。
 
@@ -749,11 +724,18 @@ Fastify高性能框架测试文档展示了现代Web框架的测试策略和最�
   "warmupTimeoutMs": 10000,
   "assertions": [
     {
+      "path": "/",
+      "method": "GET",
+      "expectedStatus": 200,
+      "bodyContains": "Fastify"
+    },
+    {
       "path": "/api/health",
       "expectedStatus": 200,
       "bodyJsonSubset": { "ok": true, "framework": "fastify" }
     }
-  ]
+  ],
+  "includeDirs": ["public"]
 }
 ```
 
@@ -767,8 +749,6 @@ Fastify高性能框架测试文档展示了现代Web框架的测试策略和最�
   "entry": "server.js",
   "port": 3000,
   "warmupTimeoutMs": 10000,
-  "shutdownTimeoutMs": 3000,
-  "readySignal": "listening on port",
   "assertions": [
     {
       "path": "/",
@@ -814,5 +794,5 @@ Fastify高性能框架测试文档展示了现代Web框架的测试策略和最�
 ```
 
 **章节来源**
-- [backend-tests/fastify/meta.json:1-19](file://backend-tests/fastify/meta.json#L1-L19)
+- [backend-tests/fastify/meta.json:1-17](file://backend-tests/fastify/meta.json#L1-L17)
 - [backend-tests/fastify-plugins/meta.json:1-19](file://backend-tests/fastify-plugins/meta.json#L1-L19)
