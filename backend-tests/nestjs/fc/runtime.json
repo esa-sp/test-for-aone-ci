@@ -1,0 +1,10 @@
+{
+  "version": "1",
+  "framework": "nestjs",
+  "mode": "direct",
+  "entry": "./dist/main.js",
+  "cwd": ".",
+  "port": 3000,
+  "node": null,
+  "generatedAt": "2026-07-08T09:55:04.483Z"
+}

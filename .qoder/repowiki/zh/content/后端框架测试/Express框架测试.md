@@ -1,16 +1,20 @@
 # Express框架测试
 
 <cite>
-**本文档引用的文件**
+**本文引用的文件**
 - [Express-disambig/app.js](file://Express-disambig/app.js)
 - [Express-disambig/server.js](file://Express-disambig/server.js)
 - [Express-disambig/package.json](file://Express-disambig/package.json)
 - [backend-tests/express-export/app.js](file://backend-tests/express-export/app.js)
 - [backend-tests/express-export/meta.json](file://backend-tests/express-export/meta.json)
 - [backend-tests/express-export/package.json](file://backend-tests/express-export/package.json)
+- [backend-tests/express-export/public/index.html](file://backend-tests/express-export/public/index.html)
+- [backend-tests/express-export/public/style.css](file://backend-tests/express-export/public/style.css)
 - [backend-tests/express-listen/server.js](file://backend-tests/express-listen/server.js)
 - [backend-tests/express-listen/meta.json](file://backend-tests/express-listen/meta.json)
 - [backend-tests/express-listen/package.json](file://backend-tests/express-listen/package.json)
+- [backend-tests/express-listen/public/index.html](file://backend-tests/express-listen/public/index.html)
+- [backend-tests/express-listen/public/style.css](file://backend-tests/express-listen/public/style.css)
 - [Express-with-api/server.js](file://Express-with-api/server.js)
 - [Express-with-api/package.json](file://Express-with-api/package.json)
 - [Express-with-views/server.js](file://Express-with-views/server.js)
@@ -20,11 +24,15 @@
 - [backend-tests/express-multifile/package.json](file://backend-tests/express-multifile/package.json)
 - [backend-tests/express-multifile/routes/health.js](file://backend-tests/express-multifile/routes/health.js)
 - [backend-tests/express-multifile/middleware/auth.js](file://backend-tests/express-multifile/middleware/auth.js)
+- [backend-tests/express-multifile/public/index.html](file://backend-tests/express-multifile/public/index.html)
+- [backend-tests/express-multifile/public/style.css](file://backend-tests/express-multifile/public/style.css)
 - [backend-tests/express-typescript/src/index.ts](file://backend-tests/express-typescript/src/index.ts)
 - [backend-tests/express-typescript/src/routes/health.ts](file://backend-tests/express-typescript/src/routes/health.ts)
 - [backend-tests/express-typescript/src/routes/users.ts](file://backend-tests/express-typescript/src/routes/users.ts)
 - [backend-tests/express-typescript/meta.json](file://backend-tests/express-typescript/meta.json)
 - [backend-tests/express-typescript/tsconfig.json](file://backend-tests/express-typescript/tsconfig.json)
+- [backend-tests/express-typescript/public/index.html](file://backend-tests/express-typescript/public/index.html)
+- [backend-tests/express-typescript/public/style.css](file://backend-tests/express-typescript/public/style.css)
 - [backend-tests/_shared/demo-page.css](file://backend-tests/_shared/demo-page.css)
 - [backend-tests/_shared/demo-page.template.html](file://backend-tests/_shared/demo-page.template.html)
 - [backend-tests/_shared/template.schema.json](file://backend-tests/_shared/template.schema.json)
@@ -33,9 +41,11 @@
 
 ## 更新摘要
 **所做更改**
-- 更新了Express测试用例目录结构，反映Express-listen和Express-export已从根目录迁移至backend-tests目录
-- 更新了文件路径引用，确保所有Express测试用例的引用指向新的集中化目录结构
-- 保持了原有的测试用例内容和功能不变，仅调整了目录组织方式
+- 更新了Express测试夹具的演示页面设计，从动态JavaScript渲染改为静态HTML结构
+- 为每个Express变体（export、listen、multifile、typescript）创建了独立的品牌化style.css样式文件
+- 增强了API测试功能，提供统一的交互式接口测试界面
+- 实现了标准化的视觉设计模式，确保所有Express变体具有一致的用户体验
+- 移除了NFT依赖追踪描述，添加了动态Logo系统支持
 
 ## 目录
 1. [简介](#简介)
@@ -52,6 +62,8 @@
 ## 简介
 本技术文档围绕Express框架在不同使用模式下的测试场景展开，系统梳理以下八类典型模式：app.listen()监听端口模式、module.exports导出模式、多文件入口选择（disambiguation）模式、API路由集成模式、视图模板支持模式、**多文件路由系统模式**、**TypeScript Express实现模式**和**标准化启动脚本模式**。文档从实现原理、配置要求、构建流程、测试断言、性能对比与最佳实践等方面进行深入解析，并给出框架检测算法如何识别不同类型Express项目的说明。
 
+**更新** 本次更新重点改进了演示页面的交互体验，采用静态HTML结构替代动态JavaScript渲染，为每个Express变体提供了独立的品牌化样式设计和增强的API测试功能。
+
 ## 项目结构
 该仓库包含多个Express测试夹具（fixture），每个夹具代表一种典型的Express使用方式或组合特性，配合独立的断言配置（meta.json）与后端测试脚本，验证framework-checker与runtime生成物在本机环境中的可运行性与HTTP响应正确性。
 
@@ -59,13 +71,19 @@
 graph TB
 subgraph "Express测试夹具"
 D["Express-disambig<br/>多入口选择"]
-E["backend-tests/express-export<br/>模块导出"]
-L["backend-tests/express-listen<br/>监听端口"]
+E["backend-tests/express-export<br/>模块导出 + 静态演示页面"]
+L["backend-tests/express-listen<br/>监听端口 + 静态演示页面"]
 A["Express-with-api<br/>API路由集成"]
 V["Express-with-views<br/>视图模板支持"]
-M["backend-tests/express-multifile<br/>多文件路由系统"]
-T["backend-tests/express-typescript<br/>TypeScript实现"]
+M["backend-tests/express-multifile<br/>多文件路由系统 + 静态演示页面"]
+T["backend-tests/express-typescript<br/>TypeScript实现 + 静态演示页面"]
 S["标准化启动脚本<br/>统一start脚本"]
+end
+subgraph "演示页面系统"
+SHARED["_shared/共享资源<br/>模板和样式"]
+EP["各变体独立样式<br/>branding style.css"]
+HTML["静态HTML结构<br/>index.html"]
+JS["增强API测试<br/>交互式界面"]
 end
 subgraph "后端测试"
 RT["README.md<br/>测试规范与schema"]
@@ -93,19 +111,32 @@ CJ --> V
 CJ --> M
 CJ --> T
 CJ --> S
+EP --> DP
+HTML --> DP
+JS --> DP
+SHARED --> EP
 ```
 
 **图表来源**
 - [Express-disambig/app.js:1-6](file://Express-disambig/app.js#L1-L6)
 - [Express-disambig/server.js:1-7](file://Express-disambig/server.js#L1-L7)
 - [backend-tests/express-export/app.js:1-39](file://backend-tests/express-export/app.js#L1-L39)
+- [backend-tests/express-export/public/index.html:1-61](file://backend-tests/express-export/public/index.html#L1-L61)
+- [backend-tests/express-export/public/style.css:1-461](file://backend-tests/express-export/public/style.css#L1-L461)
 - [backend-tests/express-listen/server.js:1-43](file://backend-tests/express-listen/server.js#L1-L43)
+- [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
+- [backend-tests/express-listen/public/style.css:1-461](file://backend-tests/express-listen/public/style.css#L1-L461)
 - [Express-with-api/server.js:1-12](file://Express-with-api/server.js#L1-L12)
 - [Express-with-views/server.js:1-15](file://Express-with-views/server.js#L1-L15)
 - [backend-tests/express-multifile/app.js:1-28](file://backend-tests/express-multifile/app.js#L1-L28)
+- [backend-tests/express-multifile/public/index.html:1-65](file://backend-tests/express-multifile/public/index.html#L1-L65)
+- [backend-tests/express-multifile/public/style.css:1-461](file://backend-tests/express-multifile/public/style.css#L1-L461)
 - [backend-tests/express-typescript/src/index.ts:1-22](file://backend-tests/express-typescript/src/index.ts#L1-L22)
-- [backend-tests/_shared/demo-page.css:1-50](file://backend-tests/_shared/demo-page.css#L1-L50)
+- [backend-tests/express-typescript/public/index.html:1-66](file://backend-tests/express-typescript/public/index.html#L1-L66)
+- [backend-tests/express-typescript/public/style.css:1-461](file://backend-tests/express-typescript/public/style.css#L1-L461)
+- [backend-tests/_shared/demo-page.css:1-236](file://backend-tests/_shared/demo-page.css#L1-L236)
 - [backend-tests/_shared/demo-page.template.html:1-227](file://backend-tests/_shared/demo-page.template.html#L1-L227)
+- [backend-tests/_shared/template.schema.json:1-59](file://backend-tests/_shared/template.schema.json#L1-59)
 - [backend-tests/README.md:1-133](file://backend-tests/README.md#L1-L133)
 - [case.json:298-521](file://case.json#L298-L521)
 
@@ -115,25 +146,33 @@ CJ --> S
 
 ## 核心组件
 - 多入口选择（disambiguation）夹具：通过"诱饵入口"与"真实入口"的对比，演示框架检测器如何基于导入语义与入口文件列表进行甄别，最终选择真正引入框架的入口。
-- **导出模式夹具**：位于backend-tests/express-export目录，不直接监听端口，而是通过module.exports导出应用，交由runtime统一创建服务。
-- **监听端口模式夹具**：位于backend-tests/express-listen目录，显式调用app.listen并指定端口，验证runtime对listen调用的拦截与端口接管。
+- **导出模式夹具**：位于backend-tests/express-export目录，不直接监听端口，而是通过module.exports导出应用，交由runtime统一创建服务。**新增** 包含静态HTML演示页面和品牌化CSS样式。
+- **监听端口模式夹具**：位于backend-tests/express-listen目录，显式调用app.listen并指定端口，验证runtime对listen调用的拦截与端口接管。**新增** 包含完整的交互式API测试界面。
 - **API路由集成模式**：在Express应用中集成RESTful API路由，支持多种HTTP方法和参数处理。
 - **视图模板支持模式**：集成EJS等模板引擎，支持服务端渲染和动态内容生成。
-- **多文件路由系统夹具**：采用模块化架构，将路由、中间件和服务分离到不同文件夹，展示Express应用的工程化组织方式。
-- **TypeScript Express夹具**：使用TypeScript编译输出，配置tsconfig.json指定输出目录，验证TypeScript到JavaScript的转换与运行。
+- **多文件路由系统夹具**：采用模块化架构，将路由、中间件和服务分离到不同文件夹，展示Express应用的工程化组织方式。**新增** 包含模块化架构演示页面。
+- **TypeScript Express夹具**：使用TypeScript编译输出，配置tsconfig.json指定输出目录，验证TypeScript到JavaScript的转换与运行。**新增** 包含TypeScript开发体验演示。
 - **标准化启动脚本模式**：所有Express项目统一添加"start"脚本配置，简化部署和运行流程。
-- **演示页面支持**：新增演示页面模板和样式文件，提供完整的前端展示能力。
+- **演示页面支持**：**重大更新** 重新设计的交互式演示页面，采用静态HTML结构，每个Express变体拥有独立的品牌化样式，提供增强的API测试能力。
 
 **章节来源**
 - [Express-disambig/app.js:1-6](file://Express-disambig/app.js#L1-L6)
 - [Express-disambig/server.js:1-7](file://Express-disambig/server.js#L1-L7)
 - [backend-tests/express-export/app.js:1-39](file://backend-tests/express-export/app.js#L1-L39)
+- [backend-tests/express-export/public/index.html:1-61](file://backend-tests/express-export/public/index.html#L1-L61)
+- [backend-tests/express-export/public/style.css:1-461](file://backend-tests/express-export/public/style.css#L1-L461)
 - [backend-tests/express-listen/server.js:1-43](file://backend-tests/express-listen/server.js#L1-L43)
+- [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
+- [backend-tests/express-listen/public/style.css:1-461](file://backend-tests/express-listen/public/style.css#L1-L461)
 - [Express-with-api/server.js:1-12](file://Express-with-api/server.js#L1-L12)
 - [Express-with-views/server.js:1-15](file://Express-with-views/server.js#L1-L15)
 - [backend-tests/express-multifile/app.js:1-28](file://backend-tests/express-multifile/app.js#L1-L28)
+- [backend-tests/express-multifile/public/index.html:1-65](file://backend-tests/express-multifile/public/index.html#L1-L65)
+- [backend-tests/express-multifile/public/style.css:1-461](file://backend-tests/express-multifile/public/style.css#L1-L461)
 - [backend-tests/express-typescript/src/index.ts:1-22](file://backend-tests/express-typescript/src/index.ts#L1-L22)
-- [backend-tests/_shared/demo-page.css:1-50](file://backend-tests/_shared/demo-page.css#L1-L50)
+- [backend-tests/express-typescript/public/index.html:1-66](file://backend-tests/express-typescript/public/index.html#L1-L66)
+- [backend-tests/express-typescript/public/style.css:1-461](file://backend-tests/express-typescript/public/style.css#L1-L461)
+- [backend-tests/_shared/demo-page.css:1-236](file://backend-tests/_shared/demo-page.css#L1-L236)
 - [backend-tests/_shared/demo-page.template.html:1-227](file://backend-tests/_shared/demo-page.template.html#L1-L227)
 
 ## 架构总览
@@ -149,13 +188,18 @@ END["end build<br/>最终构建产物"]
 end
 subgraph "测试夹具"
 F1["Express-disambig"]
-F2["backend-tests/express-export"]
-F3["backend-tests/express-listen"]
+F2["backend-tests/express-export<br/>+ 静态演示页面"]
+F3["backend-tests/express-listen<br/>+ 静态演示页面"]
 F4["Express-with-api"]
 F5["Express-with-views"]
-F6["backend-tests/express-multifile"]
-F7["backend-tests/express-typescript"]
+F6["backend-tests/express-multifile<br/>+ 静态演示页面"]
+F7["backend-tests/express-typescript<br/>+ 静态演示页面"]
 F8["标准化启动脚本"]
+end
+subgraph "演示页面系统"
+SHARED["_shared/共享资源"]
+BRANDING["品牌化样式<br/>独立style.css"]
+INTERACTIVE["交互式API测试<br/>增强功能"]
 end
 subgraph "断言与验证"
 META["meta.json<br/>HTTP断言"]
@@ -183,11 +227,16 @@ F7 --> META
 F8 --> META
 META --> BT
 DP --> META
+SHARED --> BRANDING
+BRANDING --> INTERACTIVE
+INTERACTIVE --> DP
 ```
 
 **图表来源**
 - [backend-tests/README.md:38-84](file://backend-tests/README.md#L38-L84)
 - [case.json:298-521](file://case.json#L298-L521)
+- [backend-tests/_shared/demo-page.css:1-236](file://backend-tests/_shared/demo-page.css#L1-L236)
+- [backend-tests/_shared/demo-page.template.html:1-227](file://backend-tests/_shared/demo-page.template.html#L1-L227)
 
 ## 详细组件分析
 
@@ -241,6 +290,7 @@ Build --> End(["结束"])
   - runtime根据manifest.port创建服务器并注入导出的应用。
 - 测试断言
   - backend-tests/express-export/meta.json定义了多条HTTP断言，覆盖健康检查、用户查询与回显接口。
+- **更新** 新增静态HTML演示页面，包含品牌化的导航栏、英雄区域和交互式API测试功能。
 
 ```mermaid
 sequenceDiagram
@@ -254,17 +304,24 @@ RT->>RT : 读取manifest.port并创建服务器
 RT->>Dev : 注入导出的应用
 Client->>RT : 发送HTTP请求
 RT-->>Client : 返回响应
+Note over Client,RT : 同时加载静态演示页面
+Client->>RT : 访问public/index.html
+RT-->>Client : 返回品牌化界面
 ```
 
 **图表来源**
 - [backend-tests/express-export/app.js:1-39](file://backend-tests/express-export/app.js#L1-L39)
 - [backend-tests/express-export/package.json:1-11](file://backend-tests/express-export/package.json#L1-L11)
 - [backend-tests/express-export/meta.json:1-16](file://backend-tests/express-export/meta.json#L1-L16)
+- [backend-tests/express-export/public/index.html:1-61](file://backend-tests/express-export/public/index.html#L1-L61)
+- [backend-tests/express-export/public/style.css:1-461](file://backend-tests/express-export/public/style.css#L1-L461)
 
 **章节来源**
 - [backend-tests/express-export/app.js:1-39](file://backend-tests/express-export/app.js#L1-L39)
 - [backend-tests/express-export/package.json:1-11](file://backend-tests/express-export/package.json#L1-L11)
 - [backend-tests/express-export/meta.json:1-16](file://backend-tests/express-export/meta.json#L1-L16)
+- [backend-tests/express-export/public/index.html:1-61](file://backend-tests/express-export/public/index.html#L1-L61)
+- [backend-tests/express-export/public/style.css:1-461](file://backend-tests/express-export/public/style.css#L1-L461)
 
 ### app.listen()监听端口模式
 - 实现原理
@@ -277,6 +334,7 @@ RT-->>Client : 返回响应
   - runtime启动时忽略用户自定义端口，使用分配的端口。
 - 测试断言
   - backend-tests/express-listen/meta.json定义了多条HTTP断言，包含健康检查、用户查询与回显接口，并设置合理的预热超时。
+- **更新** 新增完整的交互式API测试界面，支持实时调用测试和响应查看。
 
 ```mermaid
 sequenceDiagram
@@ -288,17 +346,24 @@ RT->>RT : 拦截listen调用并记录端口
 RT->>RT : 使用manifest.port创建服务器
 Client->>RT : 访问根路径
 RT-->>Client : 返回响应
+Note over Client,RT : 同时加载增强版演示页面
+Client->>RT : 访问public/index.html
+RT-->>Client : 返回完整API测试界面
 ```
 
 **图表来源**
 - [backend-tests/express-listen/server.js:1-43](file://backend-tests/express-listen/server.js#L1-L43)
 - [backend-tests/express-listen/package.json:1-11](file://backend-tests/express-listen/package.json#L1-L11)
 - [backend-tests/express-listen/meta.json:1-43](file://backend-tests/express-listen/meta.json#L1-L43)
+- [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
+- [backend-tests/express-listen/public/style.css:1-461](file://backend-tests/express-listen/public/style.css#L1-L461)
 
 **章节来源**
 - [backend-tests/express-listen/server.js:1-43](file://backend-tests/express-listen/server.js#L1-L43)
 - [backend-tests/express-listen/package.json:1-11](file://backend-tests/express-listen/package.json#L1-L11)
 - [backend-tests/express-listen/meta.json:1-43](file://backend-tests/express-listen/meta.json#L1-L43)
+- [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
+- [backend-tests/express-listen/public/style.css:1-461](file://backend-tests/express-listen/public/style.css#L1-L461)
 
 ### API路由集成模式
 **新增** 该模式展示了Express应用中API路由的集成方式，支持RESTful API设计原则和多种HTTP方法处理。
@@ -389,6 +454,7 @@ SendResponse --> End(["结束"])
   - runtime执行时加载所有模块，包括路由、中间件和主应用。
 - 测试断言
   - backend-tests/express-multifile/meta.json定义了完整的HTTP断言，覆盖健康检查、用户管理、认证授权、分页查询等场景。
+- **更新** 新增模块化架构演示页面，展示路由组织和中间件使用示例。
 
 ```mermaid
 flowchart TD
@@ -405,6 +471,7 @@ Ready --> End(["结束"])
 **图表来源**
 - [backend-tests/express-multifile/app.js:1-28](file://backend-tests/express-multifile/app.js#L1-L28)
 - [backend-tests/express-multifile/meta.json:1-68](file://backend-tests/express-multifile/meta.json#L1-L68)
+- [backend-tests/express-multifile/public/index.html:1-65](file://backend-tests/express-multifile/public/index.html#L1-L65)
 
 **章节来源**
 - [backend-tests/express-multifile/app.js:1-28](file://backend-tests/express-multifile/app.js#L1-L28)
@@ -412,6 +479,8 @@ Ready --> End(["结束"])
 - [backend-tests/express-multifile/package.json:1-8](file://backend-tests/express-multifile/package.json#L1-L8)
 - [backend-tests/express-multifile/routes/health.js:1-9](file://backend-tests/express-multifile/routes/health.js#L1-L9)
 - [backend-tests/express-multifile/middleware/auth.js:1-14](file://backend-tests/express-multifile/middleware/auth.js#L1-L14)
+- [backend-tests/express-multifile/public/index.html:1-65](file://backend-tests/express-multifile/public/index.html#L1-L65)
+- [backend-tests/express-multifile/public/style.css:1-461](file://backend-tests/express-multifile/public/style.css#L1-L461)
 
 ### TypeScript Express实现模式
 **新增** 该模式展示了如何使用TypeScript开发Express应用，包括类型安全的路由处理、接口定义和编译配置。
@@ -432,6 +501,7 @@ Ready --> End(["结束"])
   - 生成的dist/index.js作为runtime入口文件。
 - 测试断言
   - backend-tests/express-typescript/meta.json定义了HTTP断言，验证TypeScript编译后的功能正确性。
+- **更新** 新增TypeScript开发体验演示页面，展示类型安全和现代化开发工作流。
 
 ```mermaid
 sequenceDiagram
@@ -443,6 +513,8 @@ TS->>TSC : 编译TypeScript文件
 TSC->>JS : 生成JavaScript文件
 JS->>RT : 加载编译后的入口文件
 RT-->>RT : 执行Express应用
+Note over RT : 同时加载TypeScript演示页面
+RT-->>Client : 返回TypeScript开发体验界面
 ```
 
 **图表来源**
@@ -450,6 +522,7 @@ RT-->>RT : 执行Express应用
 - [backend-tests/express-typescript/src/routes/health.ts:1-8](file://backend-tests/express-typescript/src/routes/health.ts#L1-L8)
 - [backend-tests/express-typescript/src/routes/users.ts:1-26](file://backend-tests/express-typescript/src/routes/users.ts#L1-L26)
 - [backend-tests/express-typescript/tsconfig.json:1-18](file://backend-tests/express-typescript/tsconfig.json#L1-L18)
+- [backend-tests/express-typescript/public/index.html:1-66](file://backend-tests/express-typescript/public/index.html#L1-L66)
 
 **章节来源**
 - [backend-tests/express-typescript/src/index.ts:1-22](file://backend-tests/express-typescript/src/index.ts#L1-L22)
@@ -457,6 +530,8 @@ RT-->>RT : 执行Express应用
 - [backend-tests/express-typescript/src/routes/users.ts:1-26](file://backend-tests/express-typescript/src/routes/users.ts#L1-L26)
 - [backend-tests/express-typescript/meta.json:1-16](file://backend-tests/express-typescript/meta.json#L1-L16)
 - [backend-tests/express-typescript/tsconfig.json:1-18](file://backend-tests/express-typescript/tsconfig.json#L1-L18)
+- [backend-tests/express-typescript/public/index.html:1-66](file://backend-tests/express-typescript/public/index.html#L1-L66)
+- [backend-tests/express-typescript/public/style.css:1-461](file://backend-tests/express-typescript/public/style.css#L1-L461)
 
 ### 标准化启动脚本模式
 **新增** 该模式体现了最新的Express项目配置标准化，所有Express项目统一添加"start"脚本配置，简化部署和运行流程。
@@ -498,15 +573,15 @@ RunApplication --> End(["结束"])
 - [Express-with-api/package.json:1-9](file://Express-with-api/package.json#L1-L9)
 - [Express-with-views/package.json:1-10](file://Express-with-views/package.json#L1-L10)
 
-### 演示页面支持模式
-**新增** 该模式提供了完整的前端演示页面，包括HTML模板、CSS样式和JSON Schema配置，用于展示Express应用的前端集成能力。
+### 重新设计的演示页面系统
+**重大更新** 本次更新引入了全新的演示页面系统，采用静态HTML结构替代动态JavaScript渲染，为每个Express变体提供独立的品牌化样式和增强的API测试功能。
 
 - 实现原理
-  - 提供完整的HTML模板文件，包含基本的页面结构和样式定义。
-  - CSS样式文件提供现代化的界面设计，支持响应式布局。
-  - JSON Schema定义了模板的结构规范和验证规则。
-  - 与后端测试框架集成，支持演示页面的渲染和验证。
-  - **更新** 移除了NFT依赖追踪描述，添加了动态Logo系统支持。
+  - **静态HTML结构**：每个Express变体的public/index.html采用纯静态HTML结构，移除复杂的动态JavaScript渲染逻辑。
+  - **品牌化样式系统**：每个变体拥有独立的style.css文件，包含完整的CSS变量定义、响应式布局和动画效果。
+  - **统一的视觉设计**：基于_shared/demo-page.css提供的核心样式，确保所有变体具有一致的用户体验。
+  - **增强的API测试功能**：内置交互式API测试界面，支持实时调用、响应查看和错误处理。
+  - **动态Logo系统**：支持Express框架Logo的动态加载和错误处理。
 - 配置要求
   - HTML模板文件包含基本的DOCTYPE声明和页面结构。
   - CSS样式文件提供完整的样式定义，包括颜色、字体、布局等。
@@ -525,19 +600,36 @@ LoadTemplate --> LoadStyles["加载CSS样式"]
 LoadStyles --> LoadSchema["加载JSON Schema"]
 LoadSchema --> GeneratePage["生成演示页面"]
 GeneratePage --> DynamicLogo["应用动态Logo系统"]
-DynamicLogo --> ValidatePage["验证页面功能"]
+DynamicLogo --> EnhancedTesting["增强API测试功能"]
+EnhancedTesting --> ValidatePage["验证页面功能"]
 ValidatePage --> End(["结束"])
 ```
 
 **图表来源**
-- [backend-tests/_shared/demo-page.css:1-50](file://backend-tests/_shared/demo-page.css#L1-L50)
+- [backend-tests/_shared/demo-page.css:1-236](file://backend-tests/_shared/demo-page.css#L1-L236)
 - [backend-tests/_shared/demo-page.template.html:1-227](file://backend-tests/_shared/demo-page.template.html#L1-L227)
-- [backend-tests/_shared/template.schema.json:1-80](file://backend-tests/_shared/template.schema.json#L1-80)
+- [backend-tests/_shared/template.schema.json:1-59](file://backend-tests/_shared/template.schema.json#L1-59)
+- [backend-tests/express-export/public/index.html:1-61](file://backend-tests/express-export/public/index.html#L1-L61)
+- [backend-tests/express-export/public/style.css:1-461](file://backend-tests/express-export/public/style.css#L1-L461)
+- [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
+- [backend-tests/express-listen/public/style.css:1-461](file://backend-tests/express-listen/public/style.css#L1-L461)
+- [backend-tests/express-multifile/public/index.html:1-65](file://backend-tests/express-multifile/public/index.html#L1-L65)
+- [backend-tests/express-multifile/public/style.css:1-461](file://backend-tests/express-multifile/public/style.css#L1-L461)
+- [backend-tests/express-typescript/public/index.html:1-66](file://backend-tests/express-typescript/public/index.html#L1-L66)
+- [backend-tests/express-typescript/public/style.css:1-461](file://backend-tests/express-typescript/public/style.css#L1-L461)
 
 **章节来源**
-- [backend-tests/_shared/demo-page.css:1-50](file://backend-tests/_shared/demo-page.css#L1-L50)
+- [backend-tests/_shared/demo-page.css:1-236](file://backend-tests/_shared/demo-page.css#L1-L236)
 - [backend-tests/_shared/demo-page.template.html:1-227](file://backend-tests/_shared/demo-page.template.html#L1-L227)
-- [backend-tests/_shared/template.schema.json:1-80](file://backend-tests/_shared/template.schema.json#L1-80)
+- [backend-tests/_shared/template.schema.json:1-59](file://backend-tests/_shared/template.schema.json#L1-59)
+- [backend-tests/express-export/public/index.html:1-61](file://backend-tests/express-export/public/index.html#L1-L61)
+- [backend-tests/express-export/public/style.css:1-461](file://backend-tests/express-export/public/style.css#L1-L461)
+- [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
+- [backend-tests/express-listen/public/style.css:1-461](file://backend-tests/express-listen/public/style.css#L1-L461)
+- [backend-tests/express-multifile/public/index.html:1-65](file://backend-tests/express-multifile/public/index.html#L1-L65)
+- [backend-tests/express-multifile/public/style.css:1-461](file://backend-tests/express-multifile/public/style.css#L1-L461)
+- [backend-tests/express-typescript/public/index.html:1-66](file://backend-tests/express-typescript/public/index.html#L1-L66)
+- [backend-tests/express-typescript/public/style.css:1-461](file://backend-tests/express-typescript/public/style.css#L1-L461)
 
 ## 依赖关系分析
 - 夹具与测试规范
@@ -551,7 +643,7 @@ ValidatePage --> End(["结束"])
   - **视图模板支持**：Express-with-views夹具需要EJS模板引擎。
   - **TypeScript支持**：Express-typescript夹具需要TypeScript编译器和相关类型定义。
   - **模块化架构**：Express-multifile夹具展示工程化组织方式，包含路由、中间件和服务分离。
-  - **演示页面**：新增的CSS样式、HTML模板和JSON Schema文件，提供完整的前端展示能力。
+  - **演示页面**：**重大更新** 新增的CSS样式、HTML模板和JSON Schema文件，提供完整的前端展示能力。
   - **动态Logo系统**：演示页面新增的动态Logo功能，支持运行时Logo更新。
 
 ```mermaid
@@ -563,7 +655,7 @@ P4["Express-with-api/package.json"]
 P5["Express-with-views/package.json"]
 P6["backend-tests/express-multifile/package.json"]
 P7["backend-tests/express-typescript/tsconfig.json"]
-DP["演示页面文件"]
+DP["演示页面文件<br/>HTML + CSS + Schema"]
 RS["标准化启动脚本"]
 R["backend-tests/README.md"]
 C["case.json"]
@@ -587,7 +679,9 @@ R --> C
 - [Express-with-views/package.json:1-10](file://Express-with-views/package.json#L1-L10)
 - [backend-tests/express-multifile/package.json:1-8](file://backend-tests/express-multifile/package.json#L1-L8)
 - [backend-tests/express-typescript/tsconfig.json:1-18](file://backend-tests/express-typescript/tsconfig.json#L1-L18)
-- [backend-tests/_shared/demo-page.css:1-50](file://backend-tests/_shared/demo-page.css#L1-L50)
+- [backend-tests/_shared/demo-page.css:1-236](file://backend-tests/_shared/demo-page.css#L1-L236)
+- [backend-tests/_shared/demo-page.template.html:1-227](file://backend-tests/_shared/demo-page.template.html#L1-L227)
+- [backend-tests/_shared/template.schema.json:1-59](file://backend-tests/_shared/template.schema.json#L1-59)
 - [backend-tests/README.md:18-28](file://backend-tests/README.md#L18-L28)
 - [case.json:298-521](file://case.json#L298-L521)
 
@@ -599,7 +693,9 @@ R --> C
 - [Express-with-views/package.json:1-10](file://Express-with-views/package.json#L1-L10)
 - [backend-tests/express-multifile/package.json:1-8](file://backend-tests/express-multifile/package.json#L1-L8)
 - [backend-tests/express-typescript/tsconfig.json:1-18](file://backend-tests/express-typescript/tsconfig.json#L1-L18)
-- [backend-tests/_shared/demo-page.css:1-50](file://backend-tests/_shared/demo-page.css#L1-L50)
+- [backend-tests/_shared/demo-page.css:1-236](file://backend-tests/_shared/demo-page.css#L1-L236)
+- [backend-tests/_shared/demo-page.template.html:1-227](file://backend-tests/_shared/demo-page.template.html#L1-L227)
+- [backend-tests/_shared/template.schema.json:1-59](file://backend-tests/_shared/template.schema.json#L1-59)
 - [backend-tests/README.md:18-28](file://backend-tests/README.md#L18-L28)
 - [case.json:298-521](file://case.json#L298-L521)
 
@@ -612,14 +708,14 @@ R --> C
   - **多文件路由模式**需要确保所有模块文件都被正确打包，包括路由、中间件和服务文件。
   - **API路由模式**需要打包路由处理器和中间件文件。
   - **视图模板模式**需要打包模板文件和静态资源。
-  - **演示页面**文件需要被正确识别和打包，确保前端资源的完整性。
+  - **演示页面**：**重大更新** 静态HTML结构和CSS样式文件需要被正确识别和打包，确保前端资源的完整性。
   - **动态Logo系统**需要额外的资源管理和缓存策略。
 - 断言粒度
   - 后端测试通过多条HTTP断言覆盖核心路径，快速定位问题点。
   - **多文件路由模式**包含更复杂的断言场景，涵盖认证授权、分页查询等多个方面。
   - **API路由模式**验证RESTful接口的完整功能。
   - **视图模板模式**验证服务端渲染的正确性。
-  - **演示页面**验证确保前端资源的正确加载和渲染。
+  - **演示页面**：**新增** 验证确保前端资源的正确加载和渲染。
 
 **章节来源**
 - [backend-tests/express-listen/meta.json:6-7](file://backend-tests/express-listen/meta.json#L6-L7)
@@ -650,7 +746,7 @@ R --> C
   - 验证runtime生成的start.mjs文件是否包含标准启动逻辑。
   - 确认所有Express项目都遵循统一的启动约定。
 - **演示页面显示异常**
-  - 检查HTML模板文件是否正确加载，确认CSS样式文件的路径和内容。
+  - **重大更新** 检查静态HTML模板文件是否正确加载，确认CSS样式文件的路径和内容。
   - 验证JSON Schema配置是否符合预期，确保模板字段的正确性。
   - 确认演示页面与后端测试框架的集成配置。
   - **更新** 检查动态Logo系统的配置和资源加载。
@@ -658,6 +754,10 @@ R --> C
   - 验证Logo资源文件的路径和格式。
   - 检查动态更新逻辑的实现和触发条件。
   - 确认缓存策略和性能优化措施。
+- **静态HTML结构问题**
+  - **新增** 检查HTML结构的语义化和可访问性。
+  - 验证CSS类的命名规范和样式优先级。
+  - 确认JavaScript函数的兼容性和错误处理。
 
 **章节来源**
 - [Express-disambig/server.js:1-7](file://Express-disambig/server.js#L1-L7)
@@ -668,10 +768,16 @@ R --> C
 - [backend-tests/express-multifile/app.js:1-28](file://backend-tests/express-multifile/app.js#L1-L28)
 - [backend-tests/express-typescript/tsconfig.json:1-18](file://backend-tests/express-typescript/tsconfig.json#L1-L18)
 - [backend-tests/_shared/demo-page.template.html:1-227](file://backend-tests/_shared/demo-page.template.html#L1-L227)
-- [backend-tests/_shared/template.schema.json:1-80](file://backend-tests/_shared/template.schema.json#L1-80)
+- [backend-tests/_shared/template.schema.json:1-59](file://backend-tests/_shared/template.schema.json#L1-59)
+- [backend-tests/express-export/public/index.html:1-61](file://backend-tests/express-export/public/index.html#L1-L61)
+- [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
+- [backend-tests/express-multifile/public/index.html:1-65](file://backend-tests/express-multifile/public/index.html#L1-L65)
+- [backend-tests/express-typescript/public/index.html:1-66](file://backend-tests/express-typescript/public/index.html#L1-L66)
 
 ## 结论
-本测试体系通过八个Express典型模式夹具与配套断言，全面覆盖了Express在不同使用场景下的检测、打包与运行验证。多入口选择模式展示了检测算法的健壮性；导出模式与监听端口模式分别验证了runtime对两种常见写法的兼容；**API路由集成模式**和**视图模板支持模式**扩展了Express的功能边界；**多文件路由系统模式**展示了工程化组织的最佳实践；**TypeScript Express模式**验证了类型安全开发的支持；**标准化启动脚本模式**统一了项目启动流程；**演示页面模式**提供了完整的前端展示能力。结合顶层case.json的端到端验证，形成从框架识别到部署产物的完整测试闭环。
+本测试体系通过八个Express典型模式夹具与配套断言，全面覆盖了Express在不同使用场景下的检测、打包与运行验证。多入口选择模式展示了检测算法的健壮性；导出模式与监听端口模式分别验证了runtime对两种常见写法的兼容；**API路由集成模式**和**视图模板支持模式**扩展了Express的功能边界；**多文件路由系统模式**展示了工程化组织的最佳实践；**TypeScript Express模式**验证了类型安全开发的支持；**标准化启动脚本模式**统一了项目启动流程；**重新设计的演示页面模式**提供了完整的前端展示能力和增强的API测试功能。结合顶层case.json的端到端验证，形成从框架识别到部署产物的完整测试闭环。
+
+**重大更新** 本次更新显著提升了演示页面的用户体验，采用静态HTML结构确保了更好的性能和可靠性，品牌化样式系统为每个Express变体提供了独特的视觉标识，增强的API测试功能大大改善了开发和调试体验。
 
 ## 附录
 - 测试运行建议
@@ -698,15 +804,24 @@ R --> C
   - 统一使用"start"脚本名称，确保跨平台兼容性。
   - 简化启动命令，减少配置复杂度。
   - 支持环境变量配置，适应不同部署环境。
-- **演示页面开发建议**
-  - 使用语义化的HTML结构，确保页面的可访问性。
-  - 采用模块化的CSS架构，便于维护和扩展。
-  - 遵循JSON Schema规范，确保数据结构的正确性。
-  - **更新** 集成动态Logo系统，提升用户体验。
+- **重新设计的演示页面开发建议**
+  - **重大更新** 采用静态HTML结构，确保更好的性能和SEO友好性。
+  - 使用品牌化的CSS样式系统，保持视觉一致性。
+  - 实现增强的API测试功能，提供交互式调试体验。
+  - 遵循语义化HTML规范，确保可访问性和可维护性。
+  - **更新** 集成动态Logo系统，提升品牌识别度。
 - **动态Logo系统开发建议**
   - 设计灵活的Logo配置接口，支持多种Logo格式。
   - 实现智能缓存策略，优化加载性能。
   - 提供Logo切换动画效果，增强视觉体验。
+  - **新增** 实现错误处理和降级方案，确保Logo加载失败时的优雅降级。
 
 **章节来源**
 - [backend-tests/README.md:94-133](file://backend-tests/README.md#L94-L133)
+- [backend-tests/_shared/demo-page.css:1-236](file://backend-tests/_shared/demo-page.css#L1-L236)
+- [backend-tests/_shared/demo-page.template.html:1-227](file://backend-tests/_shared/demo-page.template.html#L1-L227)
+- [backend-tests/_shared/template.schema.json:1-59](file://backend-tests/_shared/template.schema.json#L1-59)
+- [backend-tests/express-export/public/index.html:1-61](file://backend-tests/express-export/public/index.html#L1-L61)
+- [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
+- [backend-tests/express-multifile/public/index.html:1-65](file://backend-tests/express-multifile/public/index.html#L1-L65)
+- [backend-tests/express-typescript/public/index.html:1-66](file://backend-tests/express-typescript/public/index.html#L1-L66)

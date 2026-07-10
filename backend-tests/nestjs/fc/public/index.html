@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NestJS Example</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <img class="nav-logo" src="https://cdn.simpleicons.org/nestjs" alt="NestJS" onerror="this.style.display='none'" />
+      <span class="nav-title">NestJS</span>
+      <span class="nav-version">decorators</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <h1>NestJS Example</h1>
+      <p class="tagline">A progressive Node.js framework for building efficient, scalable server-side apps.</p>
+      <pre class="code-block"><code><span class="k">@Controller</span>(<span class="s">'api'</span>)
+<span class="k">export class</span> <span class="f">AppController</span> {
+
+  <span class="f">@Get</span>(<span class="s">'health'</span>)
+  <span class="f">health</span>() {
+    <span class="k">return</span> { ok: <span class="k">true</span>, framework: <span class="s">'nestjs'</span> }
+  }
+
+  <span class="f">@Get</span>(<span class="s">'users/:id'</span>)
+  <span class="f">getUser</span>(<span class="f">@Param</span>(<span class="s">'id'</span>) id: <span class="k">string</span>) {
+    <span class="k">return</span> { user: id }
+  }
+}</code></pre>
+    </div>
+  </header>
+
+  <section>
+    <div class="container">
+      <h2>API Endpoints</h2>
+      <p class="section-desc">Controller-based routes using decorators. NestJS auto-validates and maps params.</p>
+      <div class="endpoint-list" id="endpoint-list"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Built with <a href="https://nestjs.com" target="_blank" rel="noopener">NestJS</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const ENDPOINTS = [
+      { method: "GET",  path: "/api/health", desc: "Health check (@Get)" },
+      { method: "GET",  path: "/api/users/42", desc: "Get user by ID (@Param)" },
+      { method: "POST", path: "/api/echo", desc: "Echo request body (@Body)", body: { hello: "world" } },
+      { method: "GET",  path: "/api/items", desc: "List items" },
+      { method: "POST", path: "/api/items", desc: "Create item", body: { name: "Task 1" } },
+    ]
+    const METHOD_CLASS = { GET: "get", POST: "post", PUT: "put", DELETE: "delete" }
+    function renderEndpoints(){const l=document.getElementById("endpoint-list");ENDPOINTS.forEach(e=>{const c=document.createElement("div");c.className="endpoint-card";const h=document.createElement("div");h.className="endpoint-head";const t=document.createElement("span");t.className="method-tag "+(METHOD_CLASS[e.method]||"get"),t.textContent=e.method;const p=document.createElement("span");p.className="endpoint-path",p.textContent=e.path;h.appendChild(t),h.appendChild(p);const d=document.createElement("p");d.className="endpoint-desc",d.textContent=e.desc;const a=document.createElement("div");a.className="endpoint-actions";const b=document.createElement("button");b.className="btn-test",b.textContent="Send";const r=document.createElement("div");r.className="response-box",r.innerHTML='<span class="resp-placeholder">Click "Send" to see the response…</span>';b.addEventListener("click",()=>callEndpoint(e,r,b)),a.appendChild(b),c.appendChild(h),c.appendChild(d),e.body&&((o=>{const u=document.createElement("p");u.className="endpoint-body",u.textContent="Body: "+JSON.stringify(e.body),c.appendChild(u)})()),c.appendChild(a),c.appendChild(r),l.appendChild(c)})}
+    async function callEndpoint(e,r,b){const o=b.textContent;b.textContent="";const s=document.createElement("span");s.className="spinner",b.appendChild(s),b.disabled=!0,r.innerHTML="";try{const t={method:e.method,headers:{}};e.body&&(t.headers["content-type"]="application/json",t.body=JSON.stringify(e.body));const n=await fetch(e.path,t),a=await n.text();let p=a;try{p=JSON.stringify(JSON.parse(a),null,2)}catch(e){}const c=document.createElement("span");c.className="resp-status "+(n.ok?"ok":"err"),c.textContent=n.status+" "+n.statusText,r.appendChild(c),r.appendChild(document.createTextNode("\n"+p))}catch(t){const e=document.createElement("span");e.className="resp-status err",e.textContent="Request failed",r.appendChild(e),r.appendChild(document.createTextNode("\n"+t.message))}finally{b.disabled=!1,b.textContent=o}}
+    renderEndpoints()
+  </script>
+</body>
+</html>
