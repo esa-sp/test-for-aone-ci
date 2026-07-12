@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Koa Example</title>
   <link rel="stylesheet" href="style.css" />
+  <script>if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')</script>
 </head>
 <body>
   <nav class="nav">
@@ -12,6 +13,7 @@
       <img class="nav-logo" src="https://cdn.simpleicons.org/koa" alt="Koa" onerror="this.style.display='none'" />
       <span class="nav-title">Koa</span>
       <span class="nav-version">next-gen</span>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
     </div>
   </nav>
 
@@ -57,6 +59,10 @@ app.<span class="f">listen</span>(3000)</code></pre>
     function renderEndpoints(){const l=document.getElementById("endpoint-list");ENDPOINTS.forEach(e=>{const c=document.createElement("div");c.className="endpoint-card";const h=document.createElement("div");h.className="endpoint-head";const t=document.createElement("span");t.className="method-tag "+(METHOD_CLASS[e.method]||"get"),t.textContent=e.method;const p=document.createElement("span");p.className="endpoint-path",p.textContent=e.path;h.appendChild(t),h.appendChild(p);const d=document.createElement("p");d.className="endpoint-desc",d.textContent=e.desc;const a=document.createElement("div");a.className="endpoint-actions";const b=document.createElement("button");b.className="btn-test",b.textContent="Send";const r=document.createElement("div");r.className="response-box",r.innerHTML='<span class="resp-placeholder">Click "Send" to see the response…</span>';b.addEventListener("click",()=>callEndpoint(e,r,b)),a.appendChild(b),c.appendChild(h),c.appendChild(d),e.body&&((o=>{const u=document.createElement("p");u.className="endpoint-body",u.textContent="Body: "+JSON.stringify(e.body),c.appendChild(u)})()),c.appendChild(a),c.appendChild(r),l.appendChild(c)})}
     async function callEndpoint(e,r,b){const o=b.textContent;b.textContent="";const s=document.createElement("span");s.className="spinner",b.appendChild(s),b.disabled=!0,r.innerHTML="";try{const t={method:e.method,headers:{}};e.body&&(t.headers["content-type"]="application/json",t.body=JSON.stringify(e.body));const n=await fetch(e.path,t),a=await n.text();let p=a;try{p=JSON.stringify(JSON.parse(a),null,2)}catch(e){}const c=document.createElement("span");c.className="resp-status "+(n.ok?"ok":"err"),c.textContent=n.status+" "+n.statusText,r.appendChild(c),r.appendChild(document.createTextNode("\n"+p))}catch(t){const e=document.createElement("span");e.className="resp-status err",e.textContent="Request failed",r.appendChild(e),r.appendChild(document.createTextNode("\n"+t.message))}finally{b.disabled=!1,b.textContent=o}}
     renderEndpoints()
+  </script>
+  <script>
+    function toggleTheme(){var h=document.documentElement;h.classList.toggle('dark');localStorage.setItem('theme',h.classList.contains('dark')?'dark':'light');var b=document.querySelector('.theme-toggle');if(b)b.textContent=h.classList.contains('dark')?'☀️':'🌙'}
+    (function(){var b=document.querySelector('.theme-toggle');if(b)b.textContent=document.documentElement.classList.contains('dark')?'☀️':'🌙'})()
   </script>
 </body>
 </html>

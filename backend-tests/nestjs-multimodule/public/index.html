@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NestJS Example — Multi-Module</title>
   <link rel="stylesheet" href="style.css" />
+  <script>if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')</script>
 </head>
 <body>
   <nav class="nav">
@@ -12,6 +13,7 @@
       <img class="nav-logo" src="https://cdn.simpleicons.org/nestjs" alt="NestJS" onerror="this.style.display='none'" />
       <span class="nav-title">NestJS</span>
       <span class="nav-version">multi-module</span>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
     </div>
   </nav>
 
@@ -129,6 +131,10 @@ app.<span class="f">setGlobalPrefix</span>(<span class="s">'api'</span>)
     }
 
     renderEndpoints()
+  </script>
+  <script>
+    function toggleTheme(){var h=document.documentElement;h.classList.toggle('dark');localStorage.setItem('theme',h.classList.contains('dark')?'dark':'light');var b=document.querySelector('.theme-toggle');if(b)b.textContent=h.classList.contains('dark')?'☀️':'🌙'}
+    (function(){var b=document.querySelector('.theme-toggle');if(b)b.textContent=document.documentElement.classList.contains('dark')?'☀️':'🌙'})()
   </script>
 </body>
 </html>

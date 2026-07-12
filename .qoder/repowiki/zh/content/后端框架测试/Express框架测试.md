@@ -15,6 +15,10 @@
 - [backend-tests/express-listen/package.json](file://backend-tests/express-listen/package.json)
 - [backend-tests/express-listen/public/index.html](file://backend-tests/express-listen/public/index.html)
 - [backend-tests/express-listen/public/style.css](file://backend-tests/express-listen/public/style.css)
+- [backend-tests/express-listen/fc/conf.jsonc](file://backend-tests/express-listen/fc/conf.jsonc)
+- [backend-tests/express-listen/fc/package.json](file://backend-tests/express-listen/fc/package.json)
+- [backend-tests/express-listen/fc/runtime.json](file://backend-tests/express-listen/fc/runtime.json)
+- [backend-tests/express-listen/fc/start.mjs](file://backend-tests/express-listen/fc/start.mjs)
 - [Express-with-api/server.js](file://Express-with-api/server.js)
 - [Express-with-api/package.json](file://Express-with-api/package.json)
 - [Express-with-views/server.js](file://Express-with-views/server.js)
@@ -36,16 +40,17 @@
 - [backend-tests/_shared/demo-page.css](file://backend-tests/_shared/demo-page.css)
 - [backend-tests/_shared/demo-page.template.html](file://backend-tests/_shared/demo-page.template.html)
 - [backend-tests/_shared/template.schema.json](file://backend-tests/_shared/template.schema.json)
+- [backend-tests/README.md](file://backend-tests/README.md)
 - [case.json](file://case.json)
 </cite>
 
 ## 更新摘要
 **所做更改**
-- 更新了Express测试夹具的演示页面设计，从动态JavaScript渲染改为静态HTML结构
-- 为每个Express变体（export、listen、multifile、typescript）创建了独立的品牌化style.css样式文件
-- 增强了API测试功能，提供统一的交互式接口测试界面
-- 实现了标准化的视觉设计模式，确保所有Express变体具有一致的用户体验
-- 移除了NFT依赖追踪描述，添加了动态Logo系统支持
+- 新增函数计算部署配置支持，包含完整的conf.jsonc、package.json、runtime.json配置文件
+- 添加470行start.mjs运行时适配器，桥接标准Node.js HTTP服务器与函数计算的事件驱动架构
+- 实现优雅关闭机制、Web标准IO适配器和多模式路由分发器
+- 增强Express监听端口模式的函数计算兼容性验证
+- 更新架构图和流程图以反映新的函数计算集成能力
 
 ## 目录
 1. [简介](#简介)
@@ -62,7 +67,7 @@
 ## 简介
 本技术文档围绕Express框架在不同使用模式下的测试场景展开，系统梳理以下八类典型模式：app.listen()监听端口模式、module.exports导出模式、多文件入口选择（disambiguation）模式、API路由集成模式、视图模板支持模式、**多文件路由系统模式**、**TypeScript Express实现模式**和**标准化启动脚本模式**。文档从实现原理、配置要求、构建流程、测试断言、性能对比与最佳实践等方面进行深入解析，并给出框架检测算法如何识别不同类型Express项目的说明。
 
-**更新** 本次更新重点改进了演示页面的交互体验，采用静态HTML结构替代动态JavaScript渲染，为每个Express变体提供了独立的品牌化样式设计和增强的API测试功能。
+**更新** 本次更新重点增加了函数计算部署配置的完整支持，包括conf.jsonc配置、runtime.json元数据、start.mjs运行时适配器等关键组件，实现了Express应用与函数计算平台的无缝集成。
 
 ## 项目结构
 该仓库包含多个Express测试夹具（fixture），每个夹具代表一种典型的Express使用方式或组合特性，配合独立的断言配置（meta.json）与后端测试脚本，验证framework-checker与runtime生成物在本机环境中的可运行性与HTTP响应正确性。
@@ -72,12 +77,18 @@ graph TB
 subgraph "Express测试夹具"
 D["Express-disambig<br/>多入口选择"]
 E["backend-tests/express-export<br/>模块导出 + 静态演示页面"]
-L["backend-tests/express-listen<br/>监听端口 + 静态演示页面"]
+L["backend-tests/express-listen<br/>监听端口 + 静态演示页面 + FC配置"]
 A["Express-with-api<br/>API路由集成"]
 V["Express-with-views<br/>视图模板支持"]
 M["backend-tests/express-multifile<br/>多文件路由系统 + 静态演示页面"]
 T["backend-tests/express-typescript<br/>TypeScript实现 + 静态演示页面"]
 S["标准化启动脚本<br/>统一start脚本"]
+end
+subgraph "函数计算部署配置"
+FC_CONF["conf.jsonc<br/>函数计算配置"]
+FC_RUNTIME["runtime.json<br/>运行时元数据"]
+FC_START["start.mjs<br/>运行时适配器(470行)"]
+FC_PACKAGE["package.json<br/>FC专用依赖"]
 end
 subgraph "演示页面系统"
 SHARED["_shared/共享资源<br/>模板和样式"]
@@ -96,6 +107,10 @@ end
 D --> RT
 E --> RT
 L --> RT
+L --> FC_CONF
+L --> FC_RUNTIME
+L --> FC_START
+L --> FC_PACKAGE
 A --> RT
 V --> RT
 M --> RT
@@ -126,6 +141,9 @@ SHARED --> EP
 - [backend-tests/express-listen/server.js:1-43](file://backend-tests/express-listen/server.js#L1-L43)
 - [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
 - [backend-tests/express-listen/public/style.css:1-461](file://backend-tests/express-listen/public/style.css#L1-L461)
+- [backend-tests/express-listen/fc/conf.jsonc:1-16](file://backend-tests/express-listen/fc/conf.jsonc#L1-L16)
+- [backend-tests/express-listen/fc/runtime.json:1-11](file://backend-tests/express-listen/fc/runtime.json#L1-L11)
+- [backend-tests/express-listen/fc/start.mjs:1-470](file://backend-tests/express-listen/fc/start.mjs#L1-470)
 - [Express-with-api/server.js:1-12](file://Express-with-api/server.js#L1-L12)
 - [Express-with-views/server.js:1-15](file://Express-with-views/server.js#L1-L15)
 - [backend-tests/express-multifile/app.js:1-28](file://backend-tests/express-multifile/app.js#L1-L28)
@@ -137,7 +155,7 @@ SHARED --> EP
 - [backend-tests/_shared/demo-page.css:1-236](file://backend-tests/_shared/demo-page.css#L1-L236)
 - [backend-tests/_shared/demo-page.template.html:1-227](file://backend-tests/_shared/demo-page.template.html#L1-L227)
 - [backend-tests/_shared/template.schema.json:1-59](file://backend-tests/_shared/template.schema.json#L1-59)
-- [backend-tests/README.md:1-133](file://backend-tests/README.md#L1-L133)
+- [backend-tests/README.md:1-176](file://backend-tests/README.md#L1-L176)
 - [case.json:298-521](file://case.json#L298-L521)
 
 **章节来源**
@@ -147,12 +165,13 @@ SHARED --> EP
 ## 核心组件
 - 多入口选择（disambiguation）夹具：通过"诱饵入口"与"真实入口"的对比，演示框架检测器如何基于导入语义与入口文件列表进行甄别，最终选择真正引入框架的入口。
 - **导出模式夹具**：位于backend-tests/express-export目录，不直接监听端口，而是通过module.exports导出应用，交由runtime统一创建服务。**新增** 包含静态HTML演示页面和品牌化CSS样式。
-- **监听端口模式夹具**：位于backend-tests/express-listen目录，显式调用app.listen并指定端口，验证runtime对listen调用的拦截与端口接管。**新增** 包含完整的交互式API测试界面。
+- **监听端口模式夹具**：位于backend-tests/express-listen目录，显式调用app.listen并指定端口，验证runtime对listen调用的拦截与端口接管。**重大更新** 新增完整的函数计算部署配置和运行时适配器。
 - **API路由集成模式**：在Express应用中集成RESTful API路由，支持多种HTTP方法和参数处理。
 - **视图模板支持模式**：集成EJS等模板引擎，支持服务端渲染和动态内容生成。
 - **多文件路由系统夹具**：采用模块化架构，将路由、中间件和服务分离到不同文件夹，展示Express应用的工程化组织方式。**新增** 包含模块化架构演示页面。
 - **TypeScript Express夹具**：使用TypeScript编译输出，配置tsconfig.json指定输出目录，验证TypeScript到JavaScript的转换与运行。**新增** 包含TypeScript开发体验演示。
 - **标准化启动脚本模式**：所有Express项目统一添加"start"脚本配置，简化部署和运行流程。
+- **函数计算部署配置**：**全新功能** 提供完整的conf.jsonc、runtime.json、start.mjs等配置文件，实现Express应用与函数计算平台的无缝集成。
 - **演示页面支持**：**重大更新** 重新设计的交互式演示页面，采用静态HTML结构，每个Express变体拥有独立的品牌化样式，提供增强的API测试能力。
 
 **章节来源**
@@ -164,6 +183,9 @@ SHARED --> EP
 - [backend-tests/express-listen/server.js:1-43](file://backend-tests/express-listen/server.js#L1-L43)
 - [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
 - [backend-tests/express-listen/public/style.css:1-461](file://backend-tests/express-listen/public/style.css#L1-L461)
+- [backend-tests/express-listen/fc/conf.jsonc:1-16](file://backend-tests/express-listen/fc/conf.jsonc#L1-L16)
+- [backend-tests/express-listen/fc/runtime.json:1-11](file://backend-tests/express-listen/fc/runtime.json#L1-L11)
+- [backend-tests/express-listen/fc/start.mjs:1-470](file://backend-tests/express-listen/fc/start.mjs#L1-470)
 - [Express-with-api/server.js:1-12](file://Express-with-api/server.js#L1-L12)
 - [Express-with-views/server.js:1-15](file://Express-with-views/server.js#L1-L15)
 - [backend-tests/express-multifile/app.js:1-28](file://backend-tests/express-multifile/app.js#L1-L28)
@@ -176,7 +198,7 @@ SHARED --> EP
 - [backend-tests/_shared/demo-page.template.html:1-227](file://backend-tests/_shared/demo-page.template.html#L1-L227)
 
 ## 架构总览
-下图展示了Express测试夹具与后端测试框架的关系：每个夹具对应一个独立的测试用例，通过meta.json定义HTTP断言；顶层case.json定义端到端构建与部署流程，其中包含对Express各类模式的检测与打包验证。
+下图展示了Express测试夹具与后端测试框架的关系，以及新增的函数计算部署配置：每个夹具对应一个独立的测试用例，通过meta.json定义HTTP断言；顶层case.json定义端到端构建与部署流程，其中包含对Express各类模式的检测与打包验证。
 
 ```mermaid
 graph TB
@@ -186,10 +208,16 @@ RTM["runtime<br/>start.mjs生成与执行"]
 NFT["nft trace<br/>静态文件追踪"]
 END["end build<br/>最终构建产物"]
 end
+subgraph "函数计算部署层"
+CONF["conf.jsonc<br/>函数计算配置"]
+RUNTIME["runtime.json<br/>运行时元数据"]
+START["start.mjs<br/>运行时适配器(470行)"]
+FC_ADAPTER["FC适配器<br/>事件驱动桥接"]
+end
 subgraph "测试夹具"
 F1["Express-disambig"]
 F2["backend-tests/express-export<br/>+ 静态演示页面"]
-F3["backend-tests/express-listen<br/>+ 静态演示页面"]
+F3["backend-tests/express-listen<br/>+ 静态演示页面 + FC配置"]
 F4["Express-with-api"]
 F5["Express-with-views"]
 F6["backend-tests/express-multifile<br/>+ 静态演示页面"]
@@ -209,6 +237,9 @@ end
 F1 --> FC
 F2 --> FC
 F3 --> FC
+F3 --> CONF
+F3 --> RUNTIME
+F3 --> START
 F4 --> FC
 F5 --> FC
 F6 --> FC
@@ -217,6 +248,10 @@ F8 --> FC
 FC --> RTM
 RTM --> NFT
 NFT --> END
+CONF --> FC_ADAPTER
+RUNTIME --> FC_ADAPTER
+START --> FC_ADAPTER
+FC_ADAPTER --> F3
 F1 --> META
 F2 --> META
 F3 --> META
@@ -237,6 +272,9 @@ INTERACTIVE --> DP
 - [case.json:298-521](file://case.json#L298-L521)
 - [backend-tests/_shared/demo-page.css:1-236](file://backend-tests/_shared/demo-page.css#L1-L236)
 - [backend-tests/_shared/demo-page.template.html:1-227](file://backend-tests/_shared/demo-page.template.html#L1-L227)
+- [backend-tests/express-listen/fc/conf.jsonc:1-16](file://backend-tests/express-listen/fc/conf.jsonc#L1-L16)
+- [backend-tests/express-listen/fc/runtime.json:1-11](file://backend-tests/express-listen/fc/runtime.json#L1-L11)
+- [backend-tests/express-listen/fc/start.mjs:1-470](file://backend-tests/express-listen/fc/start.mjs#L1-470)
 
 ## 详细组件分析
 
@@ -334,21 +372,24 @@ RT-->>Client : 返回品牌化界面
   - runtime启动时忽略用户自定义端口，使用分配的端口。
 - 测试断言
   - backend-tests/express-listen/meta.json定义了多条HTTP断言，包含健康检查、用户查询与回显接口，并设置合理的预热超时。
-- **更新** 新增完整的交互式API测试界面，支持实时调用测试和响应查看。
+- **重大更新** 新增完整的函数计算部署配置，包括conf.jsonc、runtime.json、start.mjs等文件，实现与函数计算平台的无缝集成。
 
 ```mermaid
 sequenceDiagram
 participant Dev as "开发者代码"
 participant RT as "runtime"
+participant FC as "函数计算平台"
 participant Client as "客户端"
 Dev->>Dev : 调用app.listen(8080)
 RT->>RT : 拦截listen调用并记录端口
 RT->>RT : 使用manifest.port创建服务器
-Client->>RT : 访问根路径
+RT->>FC : 注册函数计算处理器
+Client->>RT : 发送HTTP请求
 RT-->>Client : 返回响应
 Note over Client,RT : 同时加载增强版演示页面
 Client->>RT : 访问public/index.html
 RT-->>Client : 返回完整API测试界面
+Note over RT,FC : 优雅关闭机制确保请求完成
 ```
 
 **图表来源**
@@ -357,6 +398,9 @@ RT-->>Client : 返回完整API测试界面
 - [backend-tests/express-listen/meta.json:1-43](file://backend-tests/express-listen/meta.json#L1-L43)
 - [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
 - [backend-tests/express-listen/public/style.css:1-461](file://backend-tests/express-listen/public/style.css#L1-L461)
+- [backend-tests/express-listen/fc/conf.jsonc:1-16](file://backend-tests/express-listen/fc/conf.jsonc#L1-L16)
+- [backend-tests/express-listen/fc/runtime.json:1-11](file://backend-tests/express-listen/fc/runtime.json#L1-L11)
+- [backend-tests/express-listen/fc/start.mjs:1-470](file://backend-tests/express-listen/fc/start.mjs#L1-470)
 
 **章节来源**
 - [backend-tests/express-listen/server.js:1-43](file://backend-tests/express-listen/server.js#L1-L43)
@@ -364,6 +408,9 @@ RT-->>Client : 返回完整API测试界面
 - [backend-tests/express-listen/meta.json:1-43](file://backend-tests/express-listen/meta.json#L1-L43)
 - [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
 - [backend-tests/express-listen/public/style.css:1-461](file://backend-tests/express-listen/public/style.css#L1-L461)
+- [backend-tests/express-listen/fc/conf.jsonc:1-16](file://backend-tests/express-listen/fc/conf.jsonc#L1-L16)
+- [backend-tests/express-listen/fc/runtime.json:1-11](file://backend-tests/express-listen/fc/runtime.json#L1-L11)
+- [backend-tests/express-listen/fc/start.mjs:1-470](file://backend-tests/express-listen/fc/start.mjs#L1-470)
 
 ### API路由集成模式
 **新增** 该模式展示了Express应用中API路由的集成方式，支持RESTful API设计原则和多种HTTP方法处理。
@@ -573,6 +620,65 @@ RunApplication --> End(["结束"])
 - [Express-with-api/package.json:1-9](file://Express-with-api/package.json#L1-L9)
 - [Express-with-views/package.json:1-10](file://Express-with-views/package.json#L1-L10)
 
+### 函数计算部署配置模式
+**全新功能** 该模式展示了Express应用与函数计算平台的完整集成方案，提供标准化的部署配置和运行时适配器。
+
+- 实现原理
+  - **conf.jsonc配置**：定义函数计算的基本配置，包括运行时版本、规格、入口点、端口、并发数、超时时间等。
+  - **runtime.json元数据**：存储框架检测信息，包括框架类型、运行模式、入口文件、工作目录、端口等。
+  - **start.mjs运行时适配器**：470行的核心适配器，桥接标准Node.js HTTP服务器与函数计算的事件驱动架构。
+  - **优雅关闭机制**：支持SIGTERM/SIGINT信号处理，确保in-flight请求在完成前不会中断。
+  - **Web标准IO适配器**：支持Fetch API风格的处理器，兼容现代Web标准。
+  - **多模式路由分发器**：支持direct、fc-handlers、spawn三种运行模式。
+- 配置要求
+  - conf.jsonc：定义函数计算平台的资源配置和运行参数。
+  - runtime.json：包含框架检测和运行时配置信息。
+  - start.mjs：自动生成的运行时适配器，无需手动修改。
+  - package.json：包含FC专用的依赖和启动脚本。
+- 构建流程
+  - framework-checker识别Express项目并生成runtime.json。
+  - 构建过程复制必要的配置文件到fc目录。
+  - 函数计算平台加载conf.jsonc配置并启动start.mjs。
+  - 运行时适配器加载用户应用并启动HTTP服务器。
+- **重大更新** 新增完整的函数计算部署支持，实现Express应用的一键部署到函数计算平台。
+
+```mermaid
+sequenceDiagram
+participant Dev as "开发者代码"
+participant FCConf as "conf.jsonc"
+participant Runtime as "runtime.json"
+participant Adapter as "start.mjs适配器"
+participant FCPlatform as "函数计算平台"
+participant Client as "客户端"
+Dev->>Dev : 编写Express应用
+Dev->>FCConf : 生成函数计算配置
+Dev->>Runtime : 生成运行时元数据
+FCPlatform->>FCConf : 读取配置
+FCPlatform->>Adapter : 启动运行时适配器
+Adapter->>Runtime : 加载运行时配置
+Adapter->>Dev : 加载用户应用
+Adapter->>Adapter : 初始化Web标准IO适配器
+Adapter->>Adapter : 设置优雅关闭机制
+Client->>FCPlatform : 发送HTTP请求
+FCPlatform->>Adapter : 转发请求
+Adapter->>Dev : 调用Express应用
+Dev-->>Adapter : 返回响应
+Adapter-->>Client : 返回响应
+Note over Adapter,FCPlatform : 优雅关闭确保请求完成
+```
+
+**图表来源**
+- [backend-tests/express-listen/fc/conf.jsonc:1-16](file://backend-tests/express-listen/fc/conf.jsonc#L1-L16)
+- [backend-tests/express-listen/fc/runtime.json:1-11](file://backend-tests/express-listen/fc/runtime.json#L1-L11)
+- [backend-tests/express-listen/fc/start.mjs:1-470](file://backend-tests/express-listen/fc/start.mjs#L1-470)
+- [backend-tests/express-listen/fc/package.json:1-13](file://backend-tests/express-listen/fc/package.json#L1-13)
+
+**章节来源**
+- [backend-tests/express-listen/fc/conf.jsonc:1-16](file://backend-tests/express-listen/fc/conf.jsonc#L1-L16)
+- [backend-tests/express-listen/fc/runtime.json:1-11](file://backend-tests/express-listen/fc/runtime.json#L1-L11)
+- [backend-tests/express-listen/fc/start.mjs:1-470](file://backend-tests/express-listen/fc/start.mjs#L1-470)
+- [backend-tests/express-listen/fc/package.json:1-13](file://backend-tests/express-listen/fc/package.json#L1-13)
+
 ### 重新设计的演示页面系统
 **重大更新** 本次更新引入了全新的演示页面系统，采用静态HTML结构替代动态JavaScript渲染，为每个Express变体提供独立的品牌化样式和增强的API测试功能。
 
@@ -637,6 +743,7 @@ ValidatePage --> End(["结束"])
   - 顶层case.json定义端到端构建与部署流程，覆盖Express各类模式的检测与打包。
   - **演示页面**提供额外的前端展示能力，与后端测试框架协同工作。
   - **标准化启动脚本**确保所有Express项目具有统一的启动方式。
+  - **函数计算配置**为监听端口模式提供完整的云部署支持。
 - 关键依赖
   - Express版本：各夹具均使用^4.18.0。
   - **API路由支持**：Express-with-api夹具需要完整的路由配置。
@@ -644,6 +751,7 @@ ValidatePage --> End(["结束"])
   - **TypeScript支持**：Express-typescript夹具需要TypeScript编译器和相关类型定义。
   - **模块化架构**：Express-multifile夹具展示工程化组织方式，包含路由、中间件和服务分离。
   - **演示页面**：**重大更新** 新增的CSS样式、HTML模板和JSON Schema文件，提供完整的前端展示能力。
+  - **函数计算部署**：**全新功能** conf.jsonc、runtime.json、start.mjs等配置文件，实现与函数计算平台的集成。
   - **动态Logo系统**：演示页面新增的动态Logo功能，支持运行时Logo更新。
 
 ```mermaid
@@ -651,23 +759,27 @@ graph TB
 P1["Express-disambig/package.json"]
 P2["backend-tests/express-export/package.json"]
 P3["backend-tests/express-listen/package.json"]
+P3FC["backend-tests/express-listen/fc/package.json"]
 P4["Express-with-api/package.json"]
 P5["Express-with-views/package.json"]
 P6["backend-tests/express-multifile/package.json"]
 P7["backend-tests/express-typescript/tsconfig.json"]
 DP["演示页面文件<br/>HTML + CSS + Schema"]
 RS["标准化启动脚本"]
+FC["函数计算配置<br/>conf.jsonc + runtime.json + start.mjs"]
 R["backend-tests/README.md"]
 C["case.json"]
 P1 --> R
 P2 --> R
 P3 --> R
+P3FC --> FC
 P4 --> R
 P5 --> R
 P6 --> R
 P7 --> R
 DP --> R
 RS --> R
+FC --> R
 R --> C
 ```
 
@@ -675,6 +787,7 @@ R --> C
 - [Express-disambig/package.json:1-9](file://Express-disambig/package.json#L1-L9)
 - [backend-tests/express-export/package.json:1-11](file://backend-tests/express-export/package.json#L1-L11)
 - [backend-tests/express-listen/package.json:1-11](file://backend-tests/express-listen/package.json#L1-L11)
+- [backend-tests/express-listen/fc/package.json:1-13](file://backend-tests/express-listen/fc/package.json#L1-13)
 - [Express-with-api/package.json:1-9](file://Express-with-api/package.json#L1-L9)
 - [Express-with-views/package.json:1-10](file://Express-with-views/package.json#L1-L10)
 - [backend-tests/express-multifile/package.json:1-8](file://backend-tests/express-multifile/package.json#L1-L8)
@@ -689,6 +802,7 @@ R --> C
 - [Express-disambig/package.json:1-9](file://Express-disambig/package.json#L1-L9)
 - [backend-tests/express-export/package.json:1-11](file://backend-tests/express-export/package.json#L1-L11)
 - [backend-tests/express-listen/package.json:1-11](file://backend-tests/express-listen/package.json#L1-L11)
+- [backend-tests/express-listen/fc/package.json:1-13](file://backend-tests/express-listen/fc/package.json#L1-13)
 - [Express-with-api/package.json:1-9](file://Express-with-api/package.json#L1-L9)
 - [Express-with-views/package.json:1-10](file://Express-with-views/package.json#L1-L10)
 - [backend-tests/express-multifile/package.json:1-8](file://backend-tests/express-multifile/package.json#L1-L8)
@@ -704,11 +818,13 @@ R --> C
   - 监听端口模式（express-listen）设置了较长的预热超时，确保服务稳定就绪后再接受请求。
   - **TypeScript模式**设置了更长的预热超时（10000ms），因为需要等待TypeScript编译完成。
   - **标准化启动脚本**减少了启动过程中的配置差异，提高了启动一致性。
+  - **函数计算模式**需要考虑冷启动优化，通过预加载和缓存策略减少首次请求延迟。
 - 文件打包
   - **多文件路由模式**需要确保所有模块文件都被正确打包，包括路由、中间件和服务文件。
   - **API路由模式**需要打包路由处理器和中间件文件。
   - **视图模板模式**需要打包模板文件和静态资源。
   - **演示页面**：**重大更新** 静态HTML结构和CSS样式文件需要被正确识别和打包，确保前端资源的完整性。
+  - **函数计算配置**：**新增** conf.jsonc、runtime.json、start.mjs等配置文件需要被正确包含在部署包中。
   - **动态Logo系统**需要额外的资源管理和缓存策略。
 - 断言粒度
   - 后端测试通过多条HTTP断言覆盖核心路径，快速定位问题点。
@@ -716,12 +832,15 @@ R --> C
   - **API路由模式**验证RESTful接口的完整功能。
   - **视图模板模式**验证服务端渲染的正确性。
   - **演示页面**：**新增** 验证确保前端资源的正确加载和渲染。
+  - **函数计算部署**：**新增** 验证函数计算配置的正确性和运行时适配器的稳定性。
 
 **章节来源**
 - [backend-tests/express-listen/meta.json:6-7](file://backend-tests/express-listen/meta.json#L6-L7)
 - [backend-tests/express-multifile/meta.json:7](file://backend-tests/express-multifile/meta.json#L7)
 - [backend-tests/express-typescript/meta.json:7](file://backend-tests/express-typescript/meta.json#L7)
 - [backend-tests/README.md:86-93](file://backend-tests/README.md#L86-L93)
+- [backend-tests/express-listen/fc/conf.jsonc:1-16](file://backend-tests/express-listen/fc/conf.jsonc#L1-L16)
+- [backend-tests/express-listen/fc/start.mjs:1-470](file://backend-tests/express-listen/fc/start.mjs#L1-470)
 
 ## 故障排查指南
 - 无法识别入口
@@ -750,6 +869,12 @@ R --> C
   - 验证JSON Schema配置是否符合预期，确保模板字段的正确性。
   - 确认演示页面与后端测试框架的集成配置。
   - **更新** 检查动态Logo系统的配置和资源加载。
+- **函数计算部署问题**
+  - **新增** 检查conf.jsonc配置是否正确，确认运行时版本、入口点和端口设置。
+  - 验证runtime.json元数据的完整性，确保框架检测和运行时配置正确。
+  - 检查start.mjs适配器的生成和执行，确认Web标准IO适配器的可用性。
+  - 验证函数计算平台的权限和资源限制配置。
+  - **新增** 检查优雅关闭机制的实现，确保SIGTERM/SIGINT信号正确处理。
 - **动态Logo系统故障**
   - 验证Logo资源文件的路径和格式。
   - 检查动态更新逻辑的实现和触发条件。
@@ -773,11 +898,14 @@ R --> C
 - [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
 - [backend-tests/express-multifile/public/index.html:1-65](file://backend-tests/express-multifile/public/index.html#L1-L65)
 - [backend-tests/express-typescript/public/index.html:1-66](file://backend-tests/express-typescript/public/index.html#L1-L66)
+- [backend-tests/express-listen/fc/conf.jsonc:1-16](file://backend-tests/express-listen/fc/conf.jsonc#L1-L16)
+- [backend-tests/express-listen/fc/runtime.json:1-11](file://backend-tests/express-listen/fc/runtime.json#L1-L11)
+- [backend-tests/express-listen/fc/start.mjs:1-470](file://backend-tests/express-listen/fc/start.mjs#L1-470)
 
 ## 结论
-本测试体系通过八个Express典型模式夹具与配套断言，全面覆盖了Express在不同使用场景下的检测、打包与运行验证。多入口选择模式展示了检测算法的健壮性；导出模式与监听端口模式分别验证了runtime对两种常见写法的兼容；**API路由集成模式**和**视图模板支持模式**扩展了Express的功能边界；**多文件路由系统模式**展示了工程化组织的最佳实践；**TypeScript Express模式**验证了类型安全开发的支持；**标准化启动脚本模式**统一了项目启动流程；**重新设计的演示页面模式**提供了完整的前端展示能力和增强的API测试功能。结合顶层case.json的端到端验证，形成从框架识别到部署产物的完整测试闭环。
+本测试体系通过八个Express典型模式夹具与配套断言，全面覆盖了Express在不同使用场景下的检测、打包与运行验证。多入口选择模式展示了检测算法的健壮性；导出模式与监听端口模式分别验证了runtime对两种常见写法的兼容；**API路由集成模式**和**视图模板支持模式**扩展了Express的功能边界；**多文件路由系统模式**展示了工程化组织的最佳实践；**TypeScript Express模式**验证了类型安全开发的支持；**标准化启动脚本模式**统一了项目启动流程；**函数计算部署配置模式**提供了完整的云部署解决方案；**重新设计的演示页面模式**提供了完整的前端展示能力和增强的API测试功能。结合顶层case.json的端到端验证，形成从框架识别到部署产物的完整测试闭环。
 
-**重大更新** 本次更新显著提升了演示页面的用户体验，采用静态HTML结构确保了更好的性能和可靠性，品牌化样式系统为每个Express变体提供了独特的视觉标识，增强的API测试功能大大改善了开发和调试体验。
+**重大更新** 本次更新显著提升了演示页面的用户体验，采用静态HTML结构确保了更好的性能和可靠性，品牌化样式系统为每个Express变体提供了独特的视觉标识，增强的API测试功能大大改善了开发和调试体验。**全新功能** 函数计算部署配置的完整支持，实现了Express应用与函数计算平台的无缝集成，包括conf.jsonc配置、runtime.json元数据、470行start.mjs运行时适配器等关键组件，为云原生部署提供了完整的解决方案。
 
 ## 附录
 - 测试运行建议
@@ -804,6 +932,12 @@ R --> C
   - 统一使用"start"脚本名称，确保跨平台兼容性。
   - 简化启动命令，减少配置复杂度。
   - 支持环境变量配置，适应不同部署环境。
+- **函数计算部署配置建议**
+  - **全新功能** 合理配置conf.jsonc中的资源规格和超时时间，平衡性能和成本。
+  - 确保runtime.json元数据的准确性，特别是框架检测和入口文件路径。
+  - 利用start.mjs适配器的优雅关闭机制，确保请求处理的完整性。
+  - 配置适当的并发数和内存大小，满足业务需求。
+  - **新增** 监控函数计算的冷启动时间和性能指标，优化部署配置。
 - **重新设计的演示页面开发建议**
   - **重大更新** 采用静态HTML结构，确保更好的性能和SEO友好性。
   - 使用品牌化的CSS样式系统，保持视觉一致性。
@@ -817,7 +951,7 @@ R --> C
   - **新增** 实现错误处理和降级方案，确保Logo加载失败时的优雅降级。
 
 **章节来源**
-- [backend-tests/README.md:94-133](file://backend-tests/README.md#L94-L133)
+- [backend-tests/README.md:94-176](file://backend-tests/README.md#L94-L176)
 - [backend-tests/_shared/demo-page.css:1-236](file://backend-tests/_shared/demo-page.css#L1-L236)
 - [backend-tests/_shared/demo-page.template.html:1-227](file://backend-tests/_shared/demo-page.template.html#L1-L227)
 - [backend-tests/_shared/template.schema.json:1-59](file://backend-tests/_shared/template.schema.json#L1-59)
@@ -825,3 +959,6 @@ R --> C
 - [backend-tests/express-listen/public/index.html:1-132](file://backend-tests/express-listen/public/index.html#L1-L132)
 - [backend-tests/express-multifile/public/index.html:1-65](file://backend-tests/express-multifile/public/index.html#L1-L65)
 - [backend-tests/express-typescript/public/index.html:1-66](file://backend-tests/express-typescript/public/index.html#L1-L66)
+- [backend-tests/express-listen/fc/conf.jsonc:1-16](file://backend-tests/express-listen/fc/conf.jsonc#L1-L16)
+- [backend-tests/express-listen/fc/runtime.json:1-11](file://backend-tests/express-listen/fc/runtime.json#L1-L11)
+- [backend-tests/express-listen/fc/start.mjs:1-470](file://backend-tests/express-listen/fc/start.mjs#L1-470)
