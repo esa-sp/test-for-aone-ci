@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FC Handlers Example</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')</script>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <span class="nav-logo">⚡</span>
+      <span class="nav-title">FC Handlers</span>
+      <span class="nav-version">file-based routing</span>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <h1>FC Handlers Example</h1>
+      <p class="tagline">File-based routing for serverless functions — no framework needed, just drop files in <code>/api/</code></p>
+      <pre class="code-block"><code><span class="c">// api/foo.js — Node classic style</span>
+module.exports = (<span class="k">req</span>, <span class="k">res</span>) => {
+  res.<span class="f">end</span>(<span class="f">JSON</span>.<span class="f">stringify</span>({ from: <span class="s">'foo'</span> }))
+}
+
+<span class="c">// api/health.js — Web fetch style</span>
+module.exports = {
+  <span class="f">fetch</span>(request) {
+    <span class="k">return</span> Response.<span class="f">json</span>({ ok: <span class="k">true</span> })
+  }
+}
+
+<span class="c">// api/items.js — Named HTTP method style</span>
+exports.<span class="k">GET</span> = () => Response.<span class="f">json</span>({ list: [] })
+exports.<span class="k">POST</span> = () => Response.<span class="f">json</span>({ created: <span class="k">true</span> }, { status: <span class="s">201</span> })</code></pre>
+    </div>
+  </header>
+
+  <section>
+    <div class="container">
+      <h2>API Endpoints</h2>
+      <p class="section-desc">Three handler styles, all auto-detected from the <code>/api/</code> directory. Click "Send" to test live.</p>
+      <div class="endpoint-list" id="endpoint-list"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>How It Works</h2>
+      <p class="section-desc">The platform scans your <code>/api/</code> directory and generates a dispatcher automatically.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feat-icon">📁</div>
+          <h3>File-based Routing</h3>
+          <p>Each file in <code>/api/</code> becomes a route. <code>api/foo.js</code> → <code>/api/foo</code></p>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon">🎭</div>
+          <h3>Multi-style Handlers</h3>
+          <p>Node <code>(req,res)</code>, Web fetch <code>{ fetch }</code>, or named methods <code>GET/POST</code></p>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon">🔍</div>
+          <h3>Auto Detection</h3>
+          <p>No backend framework? No problem. The platform detects <code>/api/</code> handlers automatically.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon">📦</div>
+          <h3>Zero Config Deploy</h3>
+          <p>No <code>package.json</code> dependencies required. Just handler files and go.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Powered by <a href="https://www.alibabacloud.com/product/function-compute" target="_blank" rel="noopener">Alibaba Cloud Function Compute</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const ENDPOINTS = [
+      { method: "GET",  path: "/api/foo",    desc: "Node classic style — (req, res) => res.end(...)" },
+      { method: "GET",  path: "/api/health", desc: "Web fetch style — { fetch(request) => Response.json(...) }" },
+      { method: "GET",  path: "/api/items",  desc: "Named HTTP method — exports.GET = () => Response.json(...)" },
+      { method: "POST", path: "/api/items",  desc: "Named HTTP method — exports.POST = () => Response.json(..., { status: 201 })", body: { name: "test item" } }
+    ]
+    const METHOD_CLASS = { GET: "get", POST: "post", PUT: "put", DELETE: "delete" }
+
+    function renderEndpoints() {
+      const list = document.getElementById("endpoint-list")
+      ENDPOINTS.forEach(ep => {
+        const card = document.createElement("div")
+        card.className = "endpoint-card"
+        const head = document.createElement("div")
+        head.className = "endpoint-head"
+        const tag = document.createElement("span")
+        tag.className = "method-tag " + (METHOD_CLASS[ep.method] || "get")
+        tag.textContent = ep.method
+        const pathEl = document.createElement("span")
+        pathEl.className = "endpoint-path"
+        pathEl.textContent = ep.path
+        head.appendChild(tag); head.appendChild(pathEl)
+        const desc = document.createElement("p")
+        desc.className = "endpoint-desc"; desc.textContent = ep.desc
+        const actions = document.createElement("div")
+        actions.className = "endpoint-actions"
+        const btn = document.createElement("button")
+        btn.className = "btn-test"; btn.textContent = "Send"
+        const respBox = document.createElement("div")
+        respBox.className = "response-box"
+        respBox.innerHTML = '<span class="resp-placeholder">Click "Send" to see the response…</span>'
+        btn.addEventListener("click", () => callEndpoint(ep, respBox, btn))
+        actions.appendChild(btn)
+        card.appendChild(head); card.appendChild(desc)
+        if (ep.body) {
+          const bodyHint = document.createElement("p")
+          bodyHint.className = "endpoint-body"
+          bodyHint.textContent = "Body: " + JSON.stringify(ep.body)
+          card.appendChild(bodyHint)
+        }
+        card.appendChild(actions); card.appendChild(respBox)
+        list.appendChild(card)
+      })
+    }
+
+    async function callEndpoint(ep, respBox, btn) {
+      const original = btn.textContent
+      btn.textContent = ""
+      const spinner = document.createElement("span")
+      spinner.className = "spinner"
+      btn.appendChild(spinner)
+      btn.disabled = true
+      respBox.innerHTML = ""
+      try {
+        const opts = { method: ep.method, headers: {} }
+        if (ep.body) {
+          opts.headers["content-type"] = "application/json"
+          opts.body = JSON.stringify(ep.body)
+        }
+        const res = await fetch(ep.path, opts)
+        const text = await res.text()
+        let pretty = text
+        try { pretty = JSON.stringify(JSON.parse(text), null, 2) } catch (e) {}
+        const statusEl = document.createElement("span")
+        statusEl.className = "resp-status " + (res.ok ? "ok" : "err")
+        statusEl.textContent = res.status + " " + res.statusText
+        respBox.appendChild(statusEl)
+        respBox.appendChild(document.createTextNode("\n" + pretty))
+      } catch (err) {
+        const statusEl = document.createElement("span")
+        statusEl.className = "resp-status err"
+        statusEl.textContent = "Request failed"
+        respBox.appendChild(statusEl)
+        respBox.appendChild(document.createTextNode("\n" + err.message))
+      } finally {
+        btn.disabled = false
+        btn.textContent = original
+      }
+    }
+
+    renderEndpoints()
+  </script>
+  <script>
+    function toggleTheme(){var h=document.documentElement;h.classList.toggle('dark');localStorage.setItem('theme',h.classList.contains('dark')?'dark':'light');var b=document.querySelector('.theme-toggle');if(b)b.textContent=h.classList.contains('dark')?'☀️':'🌙'}
+    (function(){var b=document.querySelector('.theme-toggle');if(b)b.textContent=document.documentElement.classList.contains('dark')?'☀️':'🌙'})()
+  </script>
+</body>
+</html>

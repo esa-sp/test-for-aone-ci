@@ -465,6 +465,25 @@
     ]
   },
   {
+    "name": "FC Handlers 同时带 public/ 静态前端页面，构建能同时打包 handler 和 assets",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/FcHandlers-basic",
+      "InstallCommand": "",
+      "BuildCommand": "",
+      "AssetsDirectory": "public",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "No backend framework but /api/ has FC handler files",
+      "fc-bundle finished: 3 routes",
+      "FC handlers zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
     "name": "综合项目（前端 + ER + 后端 + 完整 esa.jsonc）走通整个 TestStep 流程",
     "envs": {
       "ERName": "test-for-aone-ci",
