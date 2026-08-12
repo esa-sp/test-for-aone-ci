@@ -68,16 +68,25 @@
     ]
   },
   {
-    "name": "使用非法的EnvironmentVariables参数",
+    "name": "/ReactVite 综合：非法 env + node 20.x + esa.jsonc 覆盖控制台 + 非生产分支不部署",
     "envs": {
       "ERName": "test-for-aone-ci",
+      "RootDirectory": "/ReactVite",
       "EnvironmentVariables": "{",
-      "RootDirectory": "/ReactVite"
+      "NodeVersion": "20.x",
+      "InstallCommand": "unknown command",
+      "BuildCommand": "unknown command",
+      "AssetsDirectory": "unknown",
+      "ProductionBranch": "fake-branch"
     },
     "repoName": "test-for-aone-ci",
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
+      "Install node v20.19.4 successfully",
       "<<LOG>>step|buildEnd<</LOG>>"
+    ],
+    "notRequireLogTextList": [
+      "<<LOG>>step|deploy<</LOG>>"
     ]
   },
   {
@@ -107,19 +116,6 @@
     ]
   },
   {
-    "name": "env node 20.x",
-    "envs": {
-      "ERName": "test-for-aone-ci",
-      "RootDirectory": "/ReactVite",
-      "NodeVersion": "20.x"
-    },
-    "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
-    "requireLogTextList": [
-      "Install node v20.19.4 successfully"
-    ]
-  },
-  {
     "name": "创建新仓库但仓库已存在",
     "envs": {
       "ERName": "spring-river-7555",
@@ -141,21 +137,6 @@
     "requireStatus": "FAIL",
     "requireLogTextList": [
       "Cannot find package.json or installCommand is empty, skipping installation"
-    ]
-  },
-  {
-    "name": "esa.jsonc installCommand、buildCommand、assets.directory覆盖控制台",
-    "envs": {
-      "ERName": "test-for-aone-ci",
-      "RootDirectory": "/ReactVite",
-      "InstallCommand": "unknown command",
-      "BuildCommand": "unknown command",
-      "AssetsDirectory": "unknown"
-    },
-    "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
-    "requireLogTextList": [
-      "<<LOG>>step|buildEnd<</LOG>>"
     ]
   },
   {
@@ -266,22 +247,6 @@
     ]
   },
   {
-    "name": "正常构建，非生产分支",
-    "envs": {
-      "ERName": "test-for-aone-ci",
-      "RootDirectory": "/ReactVite",
-      "ProductionBranch": "fake-branch"
-    },
-    "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
-    "requireLogTextList": [
-      "<<LOG>>step|buildEnd<</LOG>>"
-    ],
-    "notRequireLogTextList": [
-      "<<LOG>>step|deploy<</LOG>>"
-    ]
-  },
-  {
     "name": "正常构建，指定commitId",
     "envs": {
       "ERName": "test-for-aone-ci",
@@ -333,25 +298,6 @@
     ]
   },
   {
-    "name": "/api 支持动态路径：用户参数 [id]、任意深度 [...slug]，静态路径优先匹配",
-    "envs": {
-      "ERName": "test-for-aone-ci",
-      "RootDirectory": "/FcHandlers-dynamic",
-      "InstallCommand": "",
-      "BuildCommand": "",
-      "AssetsDirectory": "",
-      "EREntry": ""
-    },
-    "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
-    "requireLogTextList": [
-      "No backend framework but /api/ has FC handler files",
-      "fc-bundle finished: 3 routes",
-      "FC handlers zip created:",
-      "<<LOG>>step|buildEnd<</LOG>>"
-    ]
-  },
-  {
     "name": "/api 下两个文件名编出同一个路径时，构建直接失败并指出冲突文件",
     "envs": {
       "ERName": "test-for-aone-ci",
@@ -369,10 +315,10 @@
     ]
   },
   {
-    "name": "项目同时有 Express 和 /api 目录时，优先走后端框架（让框架自己处理 /api）",
+    "name": "Express 综合：入口消歧 + 框架优先于 FC handlers + views/ 模板自动追踪",
     "envs": {
       "ERName": "test-for-aone-ci",
-      "RootDirectory": "/Express-with-api",
+      "RootDirectory": "/Express-comprehensive",
       "InstallCommand": "npm install --no-audit --no-fund",
       "BuildCommand": "",
       "AssetsDirectory": "",
@@ -382,6 +328,7 @@
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
       "Detected backend project",
+      "nft trace finished:",
       "Backend zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ],
@@ -409,66 +356,10 @@
     ]
   },
   {
-    "name": "Express 项目带 views/ 模板时，模板文件会自动跟着打包（避免线上 404）",
+    "name": "FC Handlers 综合：多风格 handler + 动态路由 + 静态优先 + 前端页面，一次构建全覆盖",
     "envs": {
       "ERName": "test-for-aone-ci",
-      "RootDirectory": "/Express-with-views",
-      "InstallCommand": "npm install --no-audit --no-fund",
-      "BuildCommand": "",
-      "AssetsDirectory": "",
-      "EREntry": ""
-    },
-    "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
-    "requireLogTextList": [
-      "Detected backend project",
-      "nft trace finished:",
-      "Backend zip created:",
-      "<<LOG>>step|buildEnd<</LOG>>"
-    ]
-  },
-  {
-    "name": "项目同时有 server.js 和 app.js 时，能选中真正 require 框架的那个作为入口",
-    "envs": {
-      "ERName": "test-for-aone-ci",
-      "RootDirectory": "/Express-disambig",
-      "InstallCommand": "npm install --no-audit --no-fund",
-      "BuildCommand": "",
-      "AssetsDirectory": "",
-      "EREntry": ""
-    },
-    "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
-    "requireLogTextList": [
-      "Detected backend project",
-      "Backend zip created:",
-      "<<LOG>>step|buildEnd<</LOG>>"
-    ]
-  },
-  {
-    "name": "/api 用 [[...slug]] 文件名实现可选通配（同时匹配 /api 和 /api/任意/路径）",
-    "envs": {
-      "ERName": "test-for-aone-ci",
-      "RootDirectory": "/FcHandlers-optional",
-      "InstallCommand": "",
-      "BuildCommand": "",
-      "AssetsDirectory": "",
-      "EREntry": ""
-    },
-    "repoName": "test-for-aone-ci",
-    "requireStatus": "SUCCESS",
-    "requireLogTextList": [
-      "No backend framework but /api/ has FC handler files",
-      "fc-bundle finished: 1 routes",
-      "FC handlers zip created:",
-      "<<LOG>>step|buildEnd<</LOG>>"
-    ]
-  },
-  {
-    "name": "FC Handlers 同时带 public/ 静态前端页面，构建能同时打包 handler 和 assets",
-    "envs": {
-      "ERName": "test-for-aone-ci",
-      "RootDirectory": "/FcHandlers-basic",
+      "RootDirectory": "/FcHandlers-comprehensive",
       "InstallCommand": "",
       "BuildCommand": "",
       "AssetsDirectory": "public",
@@ -478,7 +369,7 @@
     "requireStatus": "SUCCESS",
     "requireLogTextList": [
       "No backend framework but /api/ has FC handler files",
-      "fc-bundle finished: 3 routes",
+      "fc-bundle finished: 6 routes",
       "FC handlers zip created:",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
@@ -497,6 +388,113 @@
       "Detected backend project (framework: Express)",
       "nft trace finished:",
       "Backend zip created:",
+      "Build artifacts generated successfully",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "Express TypeScript 项目（无 postinstall）触发 esbuild 自动预编译后正确打包",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/Express-ts-precompile",
+      "InstallCommand": "npm install --no-audit --no-fund",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Detected backend project",
+      "TypeScript entry detected",
+      "TypeScript compiled:",
+      "nft trace finished:",
+      "Backend zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "FC Handlers TypeScript：esbuild 预编译 .ts handler 后正确生成路由并打包",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "RootDirectory": "/FcHandlers-ts",
+      "InstallCommand": "",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "test-for-aone-ci",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "FC handler TS precompile: 3 compiled, 0 skipped (user-compiled), 3 total",
+      "No backend framework but /api/ has FC handler files",
+      "fc-bundle finished: 3 routes",
+      "FC handlers zip created:",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "Upload 静态文件 zip（static-plain 分类）下载解压后作为 assets 直接部署",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "GitPlatform": "upload",
+      "ArtifactURL": "https://esa-ci-test.oss-cn-hangzhou.aliyuncs.com/upload-fixtures/static-site.zip",
+      "RootDirectory": "/",
+      "InstallCommand": "",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Downloading upload file from:",
+      "Extracted to:",
+      "Upload classified as: plain static files",
+      "Cannot find package.json or installCommand is empty, skipping installation",
+      "Build artifacts generated successfully",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "Upload 单 JS 文件 zip（single-js 分类）下载解压后作为 ER entry 部署",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "GitPlatform": "upload",
+      "ArtifactURL": "https://esa-ci-test.oss-cn-hangzhou.aliyuncs.com/upload-fixtures/single-js.zip",
+      "RootDirectory": "/",
+      "InstallCommand": "",
+      "BuildCommand": "",
+      "AssetsDirectory": "",
+      "EREntry": ""
+    },
+    "repoName": "",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Downloading upload file from:",
+      "Extracted to:",
+      "Upload classified as: single JS file",
+      "Build artifacts generated successfully",
+      "<<LOG>>step|buildEnd<</LOG>>"
+    ]
+  },
+  {
+    "name": "Gitee 公开仓库（无 token 匿名克隆）能正常拉代码并走通构建",
+    "envs": {
+      "ERName": "test-for-aone-ci",
+      "GitPlatform": "gitee",
+      "GitAccountName": "Kinice",
+      "GitAccountType": "User",
+      "Branch": "main",
+      "ProductionBranch": "main",
+      "RootDirectory": "/"
+    },
+    "repoName": "wild-paper-3406",
+    "requireStatus": "SUCCESS",
+    "requireLogTextList": [
+      "Cloning gitee repository: Kinice/wild-paper-3406, branch: main",
+      "Gitee repository Kinice/wild-paper-3406 cloned successfully.",
+      "Using installCommand in esa.jsonc: npm install",
       "Build artifacts generated successfully",
       "<<LOG>>step|buildEnd<</LOG>>"
     ]
