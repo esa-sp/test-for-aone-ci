@@ -438,7 +438,7 @@
     "envs": {
       "ERName": "test-for-aone-ci",
       "GitPlatform": "upload",
-      "ArtifactURL": "https://esa-ci-test.oss-cn-hangzhou.aliyuncs.com/upload-fixtures/static-site.zip",
+      "ArtifactURL": "https://edgestar-cn.oss-cn-beijing.aliyuncs.com/pages-js-sp/static-site.zip",
       "RootDirectory": "/",
       "InstallCommand": "",
       "BuildCommand": "",
@@ -461,7 +461,7 @@
     "envs": {
       "ERName": "test-for-aone-ci",
       "GitPlatform": "upload",
-      "ArtifactURL": "https://esa-ci-test.oss-cn-hangzhou.aliyuncs.com/upload-fixtures/single-js.zip",
+      "ArtifactURL": "https://edgestar-cn.oss-cn-beijing.aliyuncs.com/pages-js-sp/single-js.zip",
       "RootDirectory": "/",
       "InstallCommand": "",
       "BuildCommand": "",
